@@ -69,15 +69,15 @@ const Footer = () => (
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-mintdark">Privacidade</p>
           <p className="mt-4 text-[13.5px] leading-relaxed text-mint/65">
-            A IA roda <strong className="text-mint">100% dentro da clínica</strong> (Ollama + Llama 3). Nenhum dado de saúde
-            sai do servidor local — nem para marcar um simples horário.
+            A IA opera integrada com <strong className="text-mint">Kimi</strong>. Nenhum dado de saúde
+            sai do controle da clínica — nem para marcar um simples horário.
           </p>
           <p className="mt-4 font-mono text-[11px] text-mint/45">recepção humana: (11) 4002-8922</p>
         </div>
       </div>
       <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-linedark pt-6 font-mono text-[10.5px] text-mint/45 sm:flex-row">
         <p>Protótipo demonstrativo · dados fictícios · nenhum paciente real foi agendado 😄</p>
-        <p>SENAI · Projeto Integrador 2026 · React Native + Node + MySQL + Ollama</p>
+        <p>SENAI · Projeto Integrador 2026 · React Native + Node + MySQL + Kimi</p>
       </div>
     </div>
   </footer>

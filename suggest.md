@@ -15,7 +15,7 @@ gantt
     Concorrência Real (SELECT FOR UPDATE) :2026-02, 2026-04
     Workers Redis / BullMQ (Fila RN02) :2026-03, 2026-05
     section 2. IA & LLM
-    Ollama Llama 3.3 / Qwen 2.5 Local :2026-02, 2026-04
+    Integração IA Kimi :2026-02, 2026-04
     RAG de Preparo & Guardrails NeMo :2026-04, 2026-06
     Hotword "Ei Lia" & TTS Streaming :2026-05, 2026-07
     section 3. Acessibilidade
@@ -59,9 +59,9 @@ gantt
 
 ## 🤖 2. Inteligência Artificial & Agente de Voz (Lia)
 
-### 🔹 2.1. Integração com LLM Local de Produção
-- [ ] **Servidor de Inferência Local (Ollama / vLLM / llama.cpp):**
-  - Conexão via endpoint interno com Llama 3.3 8B Instruct ou Qwen 2.5 7B, rodando com quantização (GGUF / AWQ) em GPU dedicada na clínica.
+### 🔹 2.1. Integração com IA Avançada (Kimi)
+- [ ] **Integração com IA (Kimi API / Moonshot):**
+  - Conexão com Kimi para processamento avançado de linguagem natural, raciocínio clínico contextual e tool calling em tempo real.
   - Schema de *Function Calling* padronizado para as 10 tools com validação estrita de tipos no retorno.
 - [ ] **RAG (Retrieval-Augmented Generation) para Orientações Clínicas:**
   - Banco vetorial local (Qdrant / ChromaDB) indexando manuais de preparo de exames, especialidades, convênios atendidos e políticas internas da clínica.

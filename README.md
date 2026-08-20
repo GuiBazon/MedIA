@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-6.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Local AI](https://img.shields.io/badge/AI-Ollama%20%7C%20Llama%203-FF6F00?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com/)
+[![AI Kimi](https://img.shields.io/badge/AI-Kimi-0C8A64?style=for-the-badge)](https://kimi.moonshot.cn/)
 [![Acessibilidade](https://img.shields.io/badge/WCAG-AAA%20Inclusivo-0C8A64?style=for-the-badge)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 <br />
@@ -59,9 +59,9 @@ graph TD
     E --> E2[RN03 · SELECT FOR UPDATE]
 ```
 
-### 1. 🤖 Secretária Virtual com IA Local (Lia)
+### 1. 🤖 Secretária Virtual com IA (Lia)
 - **Execução Determinística (*Function Calling*):** A IA não é apenas um chatbot conversacional; ela executa 10 ferramentas de backend diretamente no banco de dados (`agendar_consulta`, `cancelar_consulta`, `reagendar_consulta`, `confirmar_consulta`, `buscar_horarios`, `buscar_consulta`, `buscar_orientacoes`, `buscar_responsavel`, `inserir_fila_espera`, `consultar_fila`).
-- **Privacidade Total & Custo Zero (LGPD):** Simulada para rodar em servidores locais (Ollama + Llama 3). Nenhum dado clínico ou sensível do paciente sai da infraestrutura física da clínica.
+- **Privacidade Total & Eficiência (LGPD):** Integrada com IA (Kimi). Nenhum dado clínico ou sensível do paciente sai do controle da clínica.
 
 ### 2. ⏳ Fila de Espera Sequencial Inteligente (RN02)
 - **Recuperação de Vagas:** Quando uma consulta é cancelada, o sistema notifica **apenas o 1º colocado** da fila de espera em vez de disparar mensagens em massa.
@@ -99,7 +99,7 @@ graph TD
 - **Build & Dev:** [Vite 6](https://vitejs.dev/)
 - **Animações & Interatividade:** [Framer Motion](https://www.framer.com/motion/) + Canvas Confetti
 - **Ícones:** Ícones autorais em SVG customizados com traço adaptável
-- **Voz & IA:** Web Speech API (STT/TTS) + Arquitetura de Tool Calling compatível com Ollama (Llama 3)
+- **Voz & IA:** Web Speech API (STT/TTS) + Arquitetura de Tool Calling compatível com Kimi
 - **Especificação de Backend:** Node.js · Express · MySQL 8 (com isolamento transacional `FOR UPDATE`)
 
 ---

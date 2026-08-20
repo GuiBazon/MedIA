@@ -998,7 +998,7 @@ export default function PhoneApp() {
                   })}
                 </div>
                 <p className="deco mt-4 rounded-xl border border-dashed border-line bg-cream/70 p-2.5 text-center font-mono text-[9.5px] font-semibold text-ink/65">
-                  IA 100% local (Ollama) · seus dados não saem da clínica · v1.0
+                  IA inteligente (Kimi) · atendimento humanizado · v1.0
                 </p>
               </div>
             )}

@@ -43,7 +43,7 @@ export default function TopBar() {
         <div className="ml-auto flex items-center gap-3">
           <span className="hidden items-center gap-2 rounded-full border border-jade/35 bg-jadesoft px-3 py-1 font-mono text-[10px] font-semibold text-jadedark sm:flex">
             <span className="pulse-dot h-2 w-2 rounded-full bg-jade" />
-            ollama · local
+            kimi · online
           </span>
           <span className="hidden rounded-full border border-line bg-cream px-3 py-1 font-mono text-[11px] font-semibold tabular-nums text-ink/70 sm:block">
             {pad(agora.getHours())}:{pad(agora.getMinutes())}<span className="text-ink/40">:{pad(agora.getSeconds())}</span>

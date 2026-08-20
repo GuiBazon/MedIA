@@ -1030,7 +1030,7 @@ export default function Chat({ variant = "phone", onTool, apiRef, className = ""
             <p className="font-display text-sm font-bold leading-tight text-ink">Lia · Secretária Virtual</p>
             {simp && <span className="rounded bg-jade/20 px-1 font-mono text-[8.5px] font-extrabold text-jadedark">MODO VOZ</span>}
           </div>
-          <p className="font-mono text-[10px] text-jade">ollama · llama3 · local — online</p>
+          <p className="font-mono text-[10px] text-jade">kimi · online</p>
         </div>
         <button
           type="button"

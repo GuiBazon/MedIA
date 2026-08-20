@@ -27,7 +27,7 @@ CREATE TABLE fila_espera (
                 'EXPIRADO','CONFIRMADO'),
   horario_notificacao DATETIME NULL  -- janela 1h (RN02)
 );`,
-  "tools.json": `// ferramentas expostas ao modelo (Ollama)
+  "tools.json": `// ferramentas expostas ao modelo (Kimi)
 {
   "tools": [{
     "type": "function",
@@ -73,7 +73,7 @@ sistema não permite o cancelamento automático e
 oriente-o a procurar a administração.`,
 };
 
-const STACK = ["React Native · Expo", "React + Tailwind", "Node.js · Express", "MySQL 8", "Ollama · Llama 3", "Local-first"];
+const STACK = ["React Native · Expo", "React + Tailwind", "Node.js · Express", "MySQL 8", "Kimi AI", "Local-first"];
 
 export default function PitchSection() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("schema.sql");
@@ -90,7 +90,7 @@ export default function PitchSection() {
             </h2>
             <p className="mt-5 max-w-md text-[15.5px] leading-relaxed text-mint/70">
               Uma plataforma que une <strong className="text-paper">acessibilidade extrema</strong> para a terceira idade com
-              <strong className="text-paper"> automação total</strong> de agendamento — e roda a IA dentro da clínica, de graça.
+              <strong className="text-paper"> automação total</strong> de agendamento — e IA inteligente para a clínica.
             </p>
           </Reveal>
           <Reveal delay={120}>
@@ -104,8 +104,8 @@ export default function PitchSection() {
             <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-jade/40 bg-jade/10 px-4 py-3">
               <IcChip className="h-6 w-6 shrink-0 text-jade" />
               <div>
-                <p className="font-display text-[15px] font-extrabold text-mint">Custo de IA por consulta: R$ 0,00</p>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-mint/50">ollama roda no servidor da clínica</p>
+                <p className="font-display text-[15px] font-extrabold text-mint">Inteligência Artificial Avançada</p>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-mint/50">integração com Kimi AI</p>
               </div>
             </div>
           </Reveal>
@@ -154,7 +154,7 @@ export default function PitchSection() {
               <p className="font-mono text-[10px] font-extrabold uppercase tracking-[0.22em] text-amber">Diferenciais competitivos</p>
               <div className="mt-4 space-y-4">
                 {[
-                  ["01", <IcSpark key="a" className="h-5 w-5" />, "Chatbot autônomo com Ollama local", "Function calling direto no MySQL — sem API de nuvem, sem custo por token, sem dado do paciente saindo da clínica."],
+                  ["01", <IcSpark key="a" className="h-5 w-5" />, "Chatbot autônomo com Kimi", "Function calling direto no MySQL — atendimento ágil, inteligente e integrado ao sistema da clínica."],
                   ["02", <IcQueue key="b" className="h-5 w-5" />, "Fila de espera com janela de 1 hora", "Notificação sequencial (só o 1º colocado) e repasse automático — a taxa de ocupação se recupera sozinha."],
                   ["03", <IcPhone key="c" className="h-5 w-5" />, "Interface adaptável de verdade", "Inclusão digital para idosos não é fonte um pouco maior: é outro modo de usar o app inteiro."],
                 ].map(([n, ic, t, d]) => (
@@ -188,7 +188,7 @@ export default function PitchSection() {
                 ))}
                 <span className="font-mono text-[10px] text-mint/40">REST ↓↑</span>
                 <div className="rounded-xl border border-jade/50 bg-jade/10 px-3.5 py-2.5 text-center">
-                  <p className="flex items-center justify-center gap-1.5 text-[12px] font-bold text-mint"><IcSpark className="h-4.5 w-4.5" />Node + Ollama</p>
+                  <p className="flex items-center justify-center gap-1.5 text-[12px] font-bold text-mint"><IcSpark className="h-4.5 w-4.5" />Node + Kimi</p>
                   <p className="font-mono text-[9px] text-mint/50">tool calling</p>
                 </div>
                 <IcChevR className="h-4 w-4 text-mint/40" />

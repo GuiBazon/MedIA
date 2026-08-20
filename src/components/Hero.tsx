@@ -57,7 +57,7 @@ export default function Hero() {
           <Reveal delay={160}>
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink/80 font-medium">
               O <strong className="text-ink font-bold">AcolheMed</strong> substitui a linha ocupada da recepção por uma
-              <strong className="text-ink font-bold"> secretária virtual que roda na própria clínica</strong> (Ollama, custo zero de nuvem),
+              <strong className="text-ink font-bold"> secretária virtual inteligente</strong> (Kimi),
               preenche cancelamentos com a <strong className="text-ink font-bold">fila de espera inteligente</strong> e abre a porta da
               saúde digital para a terceira idade com o <strong className="text-ink font-bold">Modo Simplificado</strong>.
             </p>
