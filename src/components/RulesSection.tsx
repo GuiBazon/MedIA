@@ -29,7 +29,7 @@ export default function RulesSection() {
   return (
     <section id="regras" className="relative bg-cream/70 py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <SectionHead num="04" kicker="Regras de negócio"
+        <SectionHead num="06" kicker="Regras de negócio"
           title={<>As três travas que fazem<br />a operação confiar na IA.</>}
           lead="Automação sem regra de negócio é caos. O FácilMed codifica as políticas da clínica no banco — nem o chatbot consegue passar por cima." />
 

@@ -5,6 +5,8 @@ import Hero from "./components/Hero";
 import DoctorPanel from "./components/DoctorPanel";
 import AdminPanel from "./components/AdminPanel";
 import RulesSection from "./components/RulesSection";
+import AcessibilidadeSection from "./components/AcessibilidadeSection";
+import AutomacaoSection from "./components/AutomacaoSection";
 import PitchSection from "./components/PitchSection";
 import { IcLogo } from "./components/icons";
 import { ToastMsg } from "./data";
@@ -88,6 +90,8 @@ export default function App() {
           <Hero />
           <DoctorPanel />
           <AdminPanel />
+          <AcessibilidadeSection />
+          <AutomacaoSection />
           <RulesSection />
           <PitchSection />
         </main>

@@ -84,7 +84,7 @@ export default function PitchSection() {
         {/* coluna fixa */}
         <div className="lg:sticky lg:top-24 lg:self-start">
           <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-mintdark">[ 05 · Pitch SENAI ]</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-mintdark">[ 07 · Pitch SENAI ]</p>
             <h2 className="mt-4 font-display text-3xl font-extrabold leading-[1.04] tracking-tight sm:text-5xl">
               Por que o FácilMed<br />vence a recepção lotada
             </h2>

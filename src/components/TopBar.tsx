@@ -6,6 +6,8 @@ const LINKS = [
   ["#demo", "Demo ao vivo"],
   ["#medico", "Painel médico"],
   ["#gestao", "Gestão"],
+  ["#acessibilidade", "Acessibilidade"],
+  ["#secretaria", "Secretaria"],
   ["#regras", "Regras"],
   ["#pitch", "Pitch"],
 ] as const;

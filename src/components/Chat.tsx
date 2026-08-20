@@ -350,6 +350,44 @@ export default function Chat() {
       return;
     }
 
+    if (/o que levar|orientacao|preparo|documento/.test(txt)) {
+      const ag = proximaDeMaria();
+      push({ role: "tool", text: `buscar_orientacoes → orientações retornadas`, toolName: "buscar_orientacoes", toolArgs: `{ "especialidade_id": ${ag?.medicoId ?? 1} }` });
+      await wait(500);
+      setThinking(false);
+      push({ role: "ai", text: "Para a sua consulta, traga: exames anteriores, a carteirinha do convênio e um documento com foto. Chegue 10 minutos antes. 💚" });
+      setQr(["Obrigada!", "Minhas consultas"]);
+      setBusy(false);
+      return;
+    }
+
+    if (/responsavel|quem me acompanha|acompanhante|meu filho/.test(txt)) {
+      push({ role: "tool", text: `buscar_responsavel → 1 responsável autorizado`, toolName: "buscar_responsavel", toolArgs: `{ "paciente_id": 1 }` });
+      await wait(500);
+      setThinking(false);
+      push({ role: "ai", text: "Seu responsável autorizado é o João (filho). Ele pode ver suas consultas, receber lembretes e confirmar presença. Você ajusta as permissões dele na aba “Mais”." });
+      setQr(["Entendi", "Minhas consultas"]);
+      setBusy(false);
+      return;
+    }
+
+    if (/confirmar presenca|confirmar minha|confirmar consulta|confirmar que vou/.test(txt)) {
+      const ag = proximaDeMaria();
+      if (ag) {
+        push({ role: "tool", text: `confirmar_consulta → presença confirmada (API validou permissão PACIENTE)`, toolName: "confirmar_consulta", toolArgs: `{ "agendamento_id": ${ag.id} }` });
+        await wait(500);
+        setThinking(false);
+        push({ role: "ai", text: "Presença confirmada! ✅ A recepção já sabe que você vem. Até lá!" });
+        setQr(["Minhas consultas", "O que levar?"]);
+      } else {
+        setThinking(false);
+        push({ role: "ai", text: "Você não tem nenhuma consulta futura para confirmar." });
+        setQr(["Quero marcar uma consulta"]);
+      }
+      setBusy(false);
+      return;
+    }
+
     const esp = detectaEsp(txt);
     const medNome = detectaMedico(txt);
     const querAgendar = /agend|marcar|marca|consulta nova|quero (uma )?consulta/.test(txt);
