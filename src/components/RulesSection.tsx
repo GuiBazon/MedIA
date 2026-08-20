@@ -27,7 +27,7 @@ const Step = ({ n, icon, titulo, desc, ring = false }: { n: string; icon: React.
 
 export default function RulesSection() {
   return (
-    <section id="regras" className="relative bg-cream/70 py-20">
+    <section id="regras" className="relative scroll-mt-14 bg-cream/70 py-20 sm:scroll-mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHead num="06" kicker="Regras de negócio"
           title={<>As três travas que fazem<br />a operação confiar na IA.</>}

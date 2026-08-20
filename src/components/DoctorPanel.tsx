@@ -58,7 +58,7 @@ export default function DoctorPanel() {
   }, [med, state.ags, state.freed, state.extra]);
 
   return (
-    <section id="medico" className="relative bg-deep py-20 text-paper">
+    <section id="medico" className="relative scroll-mt-14 bg-deep py-20 text-paper sm:scroll-mt-16">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-jade/60 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHead dark num="02" kicker="Painel do médico"

@@ -389,13 +389,13 @@ export default function PhoneApp() {
   );
 
   return (
-    <div className={`relative mx-auto w-full max-w-[350px] ${simp ? "simp" : ""}`}>
+    <div className={`relative mx-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-[350px] ${simp ? "simp" : ""}`}>
       {/* moldura */}
-      <div className="rounded-[2.7rem] border border-ink/20 bg-deep p-[9px] shadow-[0_36px_80px_-24px_rgba(10,33,28,0.55)]">
-        <div className="relative flex h-[min(600px,78dvh)] flex-col overflow-hidden rounded-[2.15rem] bg-paper sm:h-[min(640px,80dvh)]">
+      <div className="rounded-[2.2rem] border border-ink/20 bg-deep p-[7px] shadow-[0_36px_80px_-24px_rgba(10,33,28,0.55)] sm:rounded-[2.7rem] sm:p-[9px]">
+        <div className="relative flex h-[540px] max-h-[74dvh] flex-col overflow-hidden rounded-[1.8rem] bg-paper sm:h-[620px] sm:max-h-[78dvh] sm:rounded-[2.15rem]">
           {/* notch + statusbar */}
           <div className="relative z-40 flex items-center justify-between bg-paper px-6 pb-1 pt-2.5">
-            <span className="absolute left-1/2 top-1.5 h-5 w-24 -translate-x-1/2 rounded-full bg-deep" />
+            <span className="absolute left-1/2 top-1.5 h-4 w-20 -translate-x-1/2 rounded-full bg-deep sm:h-5 sm:w-24" />
             <span className="font-mono text-[10.5px] font-semibold">{pad(relogio.getHours())}:{pad(relogio.getMinutes())}</span>
             <span className="flex items-center gap-1.5 text-ink/70">
               <svg viewBox="0 0 14 10" className="h-2.5 w-3.5" fill="currentColor" aria-hidden="true"><rect x="0" y="6" width="2.4" height="4" rx="0.6" /><rect x="3.6" y="4" width="2.4" height="6" rx="0.6" /><rect x="7.2" y="2" width="2.4" height="8" rx="0.6" /><rect x="10.8" y="0" width="2.4" height="10" rx="0.6" /></svg>

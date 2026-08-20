@@ -16,7 +16,7 @@ export default function FloatingLia() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Abrir a secretária virtual Lia"
-        className="fixed bottom-4 left-4 z-[60] flex items-center gap-2.5 rounded-full border border-jade/40 bg-pine py-2 pl-2.5 pr-4 text-mint shadow-2xl shadow-deep/50 transition-all hover:-translate-y-0.5 hover:bg-jadedark active:scale-95"
+        className="fixed bottom-[calc(env(safe-area-inset-bottom)+1rem)] left-4 z-[60] flex items-center gap-2.5 rounded-full border border-jade/40 bg-pine py-2 pl-2.5 pr-4 text-mint shadow-2xl shadow-deep/50 transition-all hover:-translate-y-0.5 hover:bg-jadedark active:scale-95"
       >
         <span className="relative grid h-9 w-9 place-items-center rounded-full bg-jade text-paper">
           <IcSpark className="h-5 w-5" />

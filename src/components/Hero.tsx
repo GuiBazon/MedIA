@@ -37,7 +37,7 @@ export default function Hero() {
   }, [state.medicos, state.ags, state.freed, state.extra]);
 
   return (
-    <section id="demo" className="relative overflow-hidden">
+    <section id="demo" className="relative scroll-mt-14 overflow-hidden sm:scroll-mt-16">
       <Ecg className="pointer-events-none absolute left-0 top-24 h-10 w-full opacity-60" />
       <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6 lg:pt-14">
         {/* coluna narrativa */}

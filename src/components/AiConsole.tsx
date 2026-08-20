@@ -40,7 +40,7 @@ export default function AiConsole() {
   };
 
   return (
-    <section id="ia" className="relative overflow-hidden bg-deep py-16 text-paper sm:py-20">
+    <section id="ia" className="relative scroll-mt-14 overflow-hidden bg-deep py-16 text-paper sm:scroll-mt-16 sm:py-20">
       <Ecg className="pointer-events-none absolute inset-x-0 top-8 h-10 w-full opacity-25" stroke="#cbe7d9" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHead
@@ -54,7 +54,7 @@ export default function AiConsole() {
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.12fr_0.88fr]">
           {/* chat — primeiro no DOM = primeiro no mobile */}
           <Reveal className="order-1">
-            <div ref={chatWrap} className="flex h-[min(74dvh,640px)] min-h-[480px] flex-col overflow-hidden rounded-3xl border border-linedark shadow-2xl shadow-abyss/60">
+            <div ref={chatWrap} className="flex h-[520px] max-h-[72dvh] flex-col overflow-hidden rounded-3xl border border-linedark shadow-2xl shadow-abyss/60 sm:h-[640px] sm:max-h-[74dvh]">
               <Chat variant="console" onTool={(t) => setLog((p) => [t, ...p].slice(0, 7))} apiRef={apiRef} />
             </div>
             <p className="mt-3 text-center font-mono text-[10.5px] text-mint/45">

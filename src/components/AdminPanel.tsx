@@ -117,7 +117,7 @@ export default function AdminPanel() {
     st === "AGUARDANDO" ? "bg-cream text-ink/60" : st === "NOTIFICADO" ? "bg-amber text-deep" : st === "EXPIRADO" ? "bg-coralsoft text-coral" : "bg-jadesoft text-jadedark";
 
   return (
-    <section id="gestao" className="relative py-20">
+    <section id="gestao" className="relative scroll-mt-14 py-20 sm:scroll-mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHead num="03" kicker="Gestão da clínica"
           title={<>Ocupação, jornadas e fila:<br />a recepção no controle.</>}
