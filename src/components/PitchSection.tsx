@@ -78,7 +78,7 @@ const STACK = ["React Native · Expo", "React + Tailwind", "Node.js · Express",
 export default function PitchSection() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("schema.sql");
   return (
-    <section id="pitch" className="relative bg-abyss py-20 text-paper">
+    <section id="pitch" className="relative scroll-mt-14 bg-abyss py-20 text-paper sm:scroll-mt-16">
       <Ecg className="pointer-events-none absolute inset-x-0 top-10 h-10 w-full opacity-30" stroke="#cbe7d9" />
       <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
         {/* coluna fixa */}

@@ -227,7 +227,7 @@ export default function AutomacaoSection() {
   const { state } = useClinic();
   const recuperaveis = state.fila.filter((f) => f.status === "AGUARDANDO" || f.status === "NOTIFICADO").length;
   return (
-    <section id="secretaria" className="relative py-20">
+    <section id="secretaria" className="relative scroll-mt-14 py-20 sm:scroll-mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
           <SectionHead num="05" kicker="Secretaria & automação"

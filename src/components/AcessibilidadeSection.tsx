@@ -119,7 +119,7 @@ const VoiceDemo = () => {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[360px]">
+    <div className="relative mx-auto w-full max-w-[calc(100vw-2rem)] sm:max-w-[360px]">
       <div className="deco absolute -left-8 top-24 hidden rotate-[-5deg] rounded-xl border border-linedark bg-deep px-3 py-2 shadow-xl lg:block">
         <p className="font-mono text-[10px] font-bold text-mint">🎙 STT local · pt-BR</p>
       </div>
@@ -345,7 +345,7 @@ const ResponsavelDemo = () => {
 /* ---------------- seção ---------------- */
 export default function AcessibilidadeSection() {
   return (
-    <section id="acessibilidade" className="relative overflow-hidden bg-deep py-20 text-paper">
+    <section id="acessibilidade" className="relative scroll-mt-14 overflow-hidden bg-deep py-20 text-paper sm:scroll-mt-16">
       <div className="deco pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-jade/10 blur-3xl" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
