@@ -22,7 +22,7 @@ export default function AdminPanel() {
   const [aberto, setAberto] = useState<number | null>(null);
   const [eds, setEds] = useState<Record<number, JEd>>({});
   const [formOpen, setFormOpen] = useState(false);
-  const [novo, setNovo] = useState({ nome: "", crm: "", espId: 1, valor: 250 });
+  const [novo, setNovo] = useState({ nome: "", crm: "", espId: 1, valor: 250, unidade: "Unidade Central", duracao: 30 });
 
   /* KPIs */
   const kpis = useMemo(() => {
@@ -105,50 +105,51 @@ export default function AdminPanel() {
       t: "addMedico",
       med: {
         id, nome: novo.nome.trim(), crm: novo.crm.trim(), espId: novo.espId, valor: novo.valor,
-        jornadas: DIAS_SEMANA.slice(0, 5).map((d) => ({ dia: d, inicio: "08:00", fim: "12:00", duracao: 30 })),
+        unidade: novo.unidade,
+        jornadas: DIAS_SEMANA.slice(0, 5).map((d) => ({ dia: d, inicio: "08:00", fim: "12:00", duracao: novo.duracao })),
       },
     });
-    dispatch({ t: "toast", texto: `${novo.nome} cadastrado com jornada SEG–SEX 08h–12h` });
-    setNovo({ nome: "", crm: "", espId: 1, valor: 250 });
+    dispatch({ t: "toast", texto: `${novo.nome} cadastrado na ${novo.unidade} com consultas de ${novo.duracao}min` });
+    setNovo({ nome: "", crm: "", espId: 1, valor: 250, unidade: "Unidade Central", duracao: 30 });
     setFormOpen(false);
   };
 
   const pill = (st: string) =>
-    st === "AGUARDANDO" ? "bg-cream text-ink/60" : st === "NOTIFICADO" ? "bg-amber text-deep" : st === "EXPIRADO" ? "bg-coralsoft text-coral" : "bg-jadesoft text-jadedark";
+    st === "AGUARDANDO" ? "bg-paper/15 text-mint border border-paper/20" : st === "NOTIFICADO" ? "bg-amber text-deep font-black shadow-sm" : st === "EXPIRADO" ? "bg-coral/30 text-coralsoft border border-coral/50 font-bold" : "bg-jade/30 text-mint border border-jade/50 font-bold";
 
   return (
     <section id="gestao" className="relative scroll-mt-14 py-20 sm:scroll-mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHead num="03" kicker="Gestão da clínica"
           title={<>Ocupação, jornadas e fila:<br />a recepção no controle.</>}
-          lead="O painel administrativo lê o mesmo banco do app. Configure jornadas, cadastre profissionais e acompanhe a fila de espera preenchendo as vagas que aparecem — sem uma ligação sequer." />
+          lead="O painel administrativo lê o mesmo banco do app. Configure jornadas, cadastre profissionais com unidade e duração, e acompanhe a fila de espera preenchendo as vagas que aparecem — sem uma ligação sequer." />
 
         {/* KPIs assimétricos */}
         <Reveal delay={80}>
-          <div className="mt-10 flex flex-wrap items-end gap-x-10 gap-y-6 rounded-3xl border border-line bg-paper p-6 shadow-sm sm:p-8">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">ocupação de hoje</p>
-              <p className="font-display text-6xl font-extrabold leading-none text-pine"><CountUp to={kpis.ocup} suffix="%" /></p>
-              <div className="mt-2.5 h-2 w-44 overflow-hidden rounded-full bg-line">
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:items-end sm:gap-x-10 sm:gap-y-6 rounded-3xl border border-line bg-paper p-5 sm:p-8 shadow-sm">
+            <div className="col-span-2 sm:col-span-1">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-ink/75">ocupação de hoje</p>
+              <p className="font-display text-5xl sm:text-6xl font-extrabold leading-none text-pine"><CountUp to={kpis.ocup} suffix="%" /></p>
+              <div className="mt-2.5 h-2 w-full max-w-44 overflow-hidden rounded-full bg-line">
                 <div className={`h-full rounded-full transition-all duration-1000 ${kpis.ocup > 85 ? "bg-amber" : "bg-jade"}`} style={{ width: `${kpis.ocup}%` }} />
               </div>
             </div>
-            <div className="h-16 w-px bg-line" />
+            <div className="hidden sm:block h-16 w-px bg-line" />
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">consultas hoje</p>
-              <p className="font-display text-4xl font-extrabold leading-none"><CountUp to={kpis.agHoje} /></p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-ink/75">consultas hoje</p>
+              <p className="font-display text-3xl sm:text-4xl font-extrabold leading-none text-pine"><CountUp to={kpis.agHoje} /></p>
             </div>
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">na fila agora</p>
-              <p className="font-display text-4xl font-extrabold leading-none text-amber"><CountUp to={kpis.fila} /></p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-ink/75">na fila agora</p>
+              <p className="font-display text-3xl sm:text-4xl font-extrabold leading-none text-amber"><CountUp to={kpis.fila} /></p>
             </div>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">no-show no mês</p>
-              <p className="font-display text-4xl font-extrabold leading-none text-coral"><CountUp to={11} suffix="%" /></p>
-              <p className="mt-1 font-mono text-[10px] font-bold text-jade">▼ 8 pts vs. semestre anterior</p>
+            <div className="col-span-2 sm:col-span-1">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-ink/75">no-show no mês</p>
+              <p className="font-display text-3xl sm:text-4xl font-extrabold leading-none text-coral"><CountUp to={11} suffix="%" /></p>
+              <p className="mt-1 font-mono text-[10.5px] font-extrabold text-jade">▼ 8 pts vs. semestre anterior</p>
             </div>
             <div className="ml-auto hidden max-w-[220px] lg:block">
-              <p className="text-[12px] leading-relaxed text-ink/55">Lembretes automáticos da Lia cortam faltas pela raiz — e a fila cobre o resto.</p>
+              <p className="text-[12px] font-medium leading-relaxed text-ink/75">Lembretes automáticos da Lia cortam faltas pela raiz — e a fila cobre o resto.</p>
             </div>
           </div>
         </Reveal>
@@ -160,22 +161,22 @@ export default function AdminPanel() {
             <Reveal delay={120}>
               <div className="rounded-3xl border border-line bg-paper p-6">
                 <div className="flex items-baseline justify-between">
-                  <h3 className="font-display text-lg font-extrabold">Ocupação · próximos 7 dias</h3>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-ink/40">todas as agendas</span>
+                  <h3 className="font-display text-lg font-extrabold text-ink">Ocupação · próximos 7 dias</h3>
+                  <span className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink/65">todas as agendas</span>
                 </div>
                 <div className="mt-5 flex h-44 items-end gap-2.5 sm:gap-3.5">
                   {semana.map((d, i) => (
                     <div key={d.iso} className="group flex flex-1 flex-col items-center gap-1.5" title={`${d.label}: ${d.pct}% ocupado`}>
-                      <span className={`font-mono text-[10.5px] font-bold ${d.pct > 85 ? "text-amber" : "text-ink/60"}`}>{d.dom ? "—" : `${d.pct}%`}</span>
+                      <span className={`font-mono text-[11px] font-bold ${d.pct > 85 ? "text-amber" : "text-ink"}`}>{d.dom ? "—" : `${d.pct}%`}</span>
                       <div className="flex h-28 w-full max-w-[46px] items-end overflow-hidden rounded-xl bg-cream">
                         <div className={`bar-grow w-full rounded-xl transition-colors ${d.iso === HOJE ? "bg-pine" : d.pct > 85 ? "bg-amber/85" : "bg-jade/75"} group-hover:brightness-110`}
                           style={{ height: `${Math.max(4, d.pct)}%`, animationDelay: `${i * 70}ms` }} />
                       </div>
-                      <span className={`font-mono text-[9.5px] uppercase ${d.iso === HOJE ? "font-bold text-jade" : "text-ink/45"}`}>{d.label}</span>
+                      <span className={`font-mono text-[10px] uppercase font-bold ${d.iso === HOJE ? "text-jade" : "text-ink/75"}`}>{d.label}</span>
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 rounded-xl bg-cream/70 px-3.5 py-2.5 font-mono text-[10.5px] text-ink/55">
+                <p className="mt-4 rounded-xl bg-cream/70 px-3.5 py-2.5 font-mono text-[11px] font-semibold text-ink/75">
                   ▲ barras acima de 85% ficam âmbar — sinal de ativar a fila de espera naquele dia.
                 </p>
               </div>
@@ -202,13 +203,30 @@ export default function AdminPanel() {
                       className="rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] outline-none focus:border-jade">
                       {ESPECIALIDADES.map((e) => <option key={e.id} value={e.id}>{e.nome}</option>)}
                     </select>
+                    <select value={novo.unidade} onChange={(e) => setNovo({ ...novo, unidade: e.target.value })}
+                      className="rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] outline-none focus:border-jade">
+                      <option value="Unidade Central">Unidade Central</option>
+                      <option value="Unidade Paulista">Unidade Paulista</option>
+                      <option value="Unidade Jardins">Unidade Jardins</option>
+                    </select>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[11px] text-ink/50">Duração:</span>
+                      <select value={novo.duracao} onChange={(e) => setNovo({ ...novo, duracao: +e.target.value })}
+                        className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] outline-none focus:border-jade">
+                        <option value={15}>15 minutos</option>
+                        <option value={20}>20 minutos</option>
+                        <option value={30}>30 minutos</option>
+                        <option value={45}>45 minutos</option>
+                        <option value={60}>60 minutos</option>
+                      </select>
+                    </div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-[11px] text-ink/50">R$</span>
                       <input type="number" value={novo.valor} onChange={(e) => setNovo({ ...novo, valor: +e.target.value })}
                         className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[13px] outline-none focus:border-jade" />
                     </div>
                     <button onClick={addMedico} className="rounded-xl bg-jade py-2.5 text-[13px] font-bold text-paper hover:bg-jadedark sm:col-span-2">
-                      Cadastrar com jornada padrão SEG–SEX 08h–12h
+                      Cadastrar Médico na {novo.unidade} (SEG–SEX 08h–12h)
                     </button>
                   </div>
                 )}
@@ -227,7 +245,7 @@ export default function AdminPanel() {
                           </span>
                           <span className="min-w-0 flex-1">
                             <span className="block truncate text-[14px] font-bold">{m.nome}</span>
-                            <span className="block font-mono text-[10px] text-ink/50">{m.crm} · {esp?.nome}</span>
+                            <span className="block font-mono text-[10px] text-ink/50">{m.crm} · {esp?.nome} · <strong className="text-jade">{m.unidade || "Unidade Central"}</strong></span>
                           </span>
                           <span className="hidden flex-wrap justify-end gap-1 sm:flex sm:max-w-[240px]">
                             {m.jornadas.length === 0 && <span className="rounded-full bg-coralsoft px-2 py-0.5 font-mono text-[9px] font-bold uppercase text-coral">sem jornada</span>}

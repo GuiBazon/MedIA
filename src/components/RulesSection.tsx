@@ -31,7 +31,7 @@ export default function RulesSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHead num="06" kicker="Regras de negócio"
           title={<>As três travas que fazem<br />a operação confiar na IA.</>}
-          lead="Automação sem regra de negócio é caos. O FácilMed codifica as políticas da clínica no banco — nem o chatbot consegue passar por cima." />
+          lead="Automação sem regra de negócio é caos. O AcolheMed codifica as políticas da clínica no banco — nem o chatbot consegue passar por cima." />
 
         <div className="mt-12 space-y-6">
           {/* RN01 */}

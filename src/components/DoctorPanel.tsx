@@ -109,30 +109,30 @@ export default function DoctorPanel() {
                       <button key={iso} onClick={() => { setDiaISO(iso); setView("dia"); }}
                         className={`group rounded-2xl border p-3 text-left transition-all hover:-translate-y-1 hover:border-jade/70 ${hoje ? "border-jade/70 bg-pine shadow-lg shadow-jade/10" : "border-linedark bg-pine/50 hover:bg-pine"}`}>
                         <div className="flex items-center justify-between">
-                          <p className="font-mono text-[10px] uppercase tracking-widest text-mintdark">
+                          <p className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-mint">
                             {["dom", "seg", "ter", "qua", "qui", "sex", "sáb"][d.getDay()]} {d.getDate()} {MESES_CURTO[d.getMonth()]}
                           </p>
-                          {hoje && <span className="rounded-full bg-jade px-1.5 py-0.5 font-mono text-[8.5px] font-bold uppercase text-paper">hoje</span>}
+                          {hoje && <span className="rounded-full bg-jade px-1.5 py-0.5 font-mono text-[9px] font-extrabold uppercase text-paper shadow-sm">hoje</span>}
                         </div>
                         <div className="mt-2.5 space-y-1.5">
-                          {slots.length === 0 && <p className="rounded-lg border border-dashed border-linedark px-2 py-2 text-center font-mono text-[10px] text-mint/40">sem atendimento</p>}
+                          {slots.length === 0 && <p className="rounded-lg border border-dashed border-linedark px-2 py-2 text-center font-mono text-[10px] font-semibold text-mint/60">sem atendimento</p>}
                           {ags.sort((a, b) => a.hora.localeCompare(b.hora)).map((a) => (
                             <div key={a.id}
-                              className={`rounded-lg px-2 py-1.5 transition-colors ${a.status === "CONCLUIDO" ? "bg-jade/15 text-mint/70" : a.status === "NAO_COMPARECEU" ? "bg-coral/20 text-coralsoft line-through" : "bg-paper/10 text-paper group-hover:bg-paper/15"}`}>
-                              <p className="font-mono text-[10px] font-bold text-jade">{a.hora}</p>
-                              <p className="truncate text-[11px] font-bold leading-tight">{a.paciente}</p>
+                              className={`rounded-lg px-2 py-1.5 transition-colors border ${a.status === "CONCLUIDO" ? "bg-jade/30 border-jade/50 text-paper font-bold" : a.status === "NAO_COMPARECEU" ? "bg-coral/30 border-coral/50 text-paper font-bold line-through" : "bg-paper/15 border-paper/20 text-paper font-semibold group-hover:bg-paper/25"}`}>
+                              <p className="font-mono text-[10.5px] font-extrabold text-mint">{a.hora}</p>
+                              <p className="truncate text-[11.5px] font-bold leading-tight text-paper">{a.paciente}</p>
                             </div>
                           ))}
                           {slots.filter((h) => !ags.some((a) => a.hora === h) && isBusyExterno(med.id, iso, h, state.freed, state.extra)).slice(0, 2).map((h) => (
-                            <div key={h} className="rounded-lg bg-paper/5 px-2 py-1.5">
-                              <p className="font-mono text-[10px] font-bold text-mint/40">{h}</p>
-                              <p className="truncate text-[11px] text-mint/45">convênio</p>
+                            <div key={h} className="rounded-lg bg-paper/10 border border-paper/15 px-2 py-1.5">
+                              <p className="font-mono text-[10px] font-bold text-mint">{h}</p>
+                              <p className="truncate text-[11px] font-medium text-mint/80">convênio externo</p>
                             </div>
                           ))}
                         </div>
                         {slots.length > 0 && (
-                          <p className="mt-2.5 border-t border-linedark pt-2 font-mono text-[9.5px] text-mint/55">
-                            {slots.length - ocup} horários livres · {slots.length} no dia
+                          <p className="mt-2.5 border-t border-linedark pt-2 font-mono text-[10px] font-semibold text-mint/80">
+                            {slots.length - ocup} livres · {slots.length} no dia
                           </p>
                         )}
                       </button>
@@ -147,46 +147,46 @@ export default function DoctorPanel() {
                     const d = fromISO(iso);
                     return (
                       <button key={iso} onClick={() => setDiaISO(iso)}
-                        className={`shrink-0 rounded-xl border px-3.5 py-2.5 text-left font-mono text-[11.5px] transition-colors ${diaISO === iso ? "border-jade bg-jade/15 text-paper" : "border-linedark bg-pine/50 text-mint/60 hover:text-paper"}`}>
+                        className={`shrink-0 rounded-xl border px-3.5 py-2.5 text-left font-mono text-[11.5px] font-semibold transition-colors ${diaISO === iso ? "border-jade bg-jade/25 text-paper font-bold shadow-sm" : "border-linedark bg-pine/50 text-mint/70 hover:text-paper"}`}>
                         {["dom", "seg", "ter", "qua", "qui", "sex", "sáb"][d.getDay()]} · {pad(d.getDate())}/{pad(d.getMonth() + 1)}
                       </button>
                     );
                   })}
                 </div>
                 <div className="rounded-2xl border border-linedark bg-pine/50 p-4">
-                  <p className="font-display text-[15px] font-bold capitalize">{fmtDataLonga(diaISO)}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-mintdark">{med.nome} · {ESPECIALIDADES.find((e) => e.id === med.espId)?.nome}</p>
+                  <p className="font-display text-[15.5px] font-extrabold capitalize text-paper">{fmtDataLonga(diaISO)}</p>
+                  <p className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-mint">{med.nome} · {ESPECIALIDADES.find((e) => e.id === med.espId)?.nome}</p>
                   <div className="mt-3.5 grid gap-1.5 sm:grid-cols-2">
                     {slotsDoDia(med, diaISO).map((h) => {
                       const ag = state.ags.find((a) => a.medicoId === med.id && a.dataISO === diaISO && a.hora === h && a.status !== "CANCELADO");
                       const ext = !ag && isBusyExterno(med.id, diaISO, h, state.freed, state.extra);
                       return ag ? (
                         <button key={h} onClick={() => { setSel(ag); setNotas(ag.anotacoes ?? ""); }}
-                          className={`flex items-center gap-3 rounded-xl border border-linedark bg-paper/8 px-3 py-2.5 text-left transition-all hover:-translate-y-0.5 hover:border-jade/60 hover:bg-paper/15`}>
-                          <span className="font-mono text-[12.5px] font-bold text-jade">{h}</span>
+                          className={`flex items-center gap-3 rounded-xl border border-linedark bg-paper/10 px-3 py-2.5 text-left transition-all hover:-translate-y-0.5 hover:border-jade/60 hover:bg-paper/20`}>
+                          <span className="font-mono text-[13px] font-extrabold text-mint">{h}</span>
                           <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[12.5px] font-bold">{ag.paciente}</span>
-                            <span className="font-mono text-[9px] uppercase tracking-wide text-mint/50">{ag.tipo === "CONVENIO" ? "convênio" : "particular"} · {ag.protocolo}</span>
+                            <span className="block truncate text-[13px] font-bold text-paper">{ag.paciente}</span>
+                            <span className="font-mono text-[9.5px] uppercase tracking-wide text-mint/70">{ag.tipo === "CONVENIO" ? "convênio" : "particular"} · {ag.protocolo}</span>
                           </span>
-                          <span className={`shrink-0 rounded-full px-2 py-0.5 font-mono text-[8.5px] font-bold uppercase ${ag.status === "CONCLUIDO" ? "bg-jade/25 text-mint" : ag.status === "NAO_COMPARECEU" ? "bg-coral/25 text-coralsoft" : "bg-paper/15 text-mint/80"}`}>
+                          <span className={`shrink-0 rounded-full px-2.5 py-0.5 font-mono text-[9px] font-extrabold uppercase shadow-sm ${ag.status === "CONCLUIDO" ? "bg-jade text-paper" : ag.status === "NAO_COMPARECEU" ? "bg-coral text-paper" : "bg-paper/20 border border-paper/30 text-paper"}`}>
                             {ag.status === "CONCLUIDO" ? "concluída" : ag.status === "NAO_COMPARECEU" ? "faltou" : "agendada"}
                           </span>
-                          <IcEdit className="h-3.5 w-3.5 shrink-0 text-mint/40" />
+                          <IcEdit className="h-3.5 w-3.5 shrink-0 text-mint/60" />
                         </button>
                       ) : (
-                        <div key={h} className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${ext ? "border-linedark bg-paper/5" : "border-dashed border-linedark"}`}>
-                          <span className="font-mono text-[12.5px] font-bold text-mint/45">{h}</span>
+                        <div key={h} className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${ext ? "border-linedark bg-paper/5 text-mint/75" : "border-dashed border-linedark text-mint/60"}`}>
+                          <span className="font-mono text-[12.5px] font-bold text-mint/70">{h}</span>
                           <span className="flex-1" />
                           {ext ? (
-                            <span className="flex items-center gap-1.5 font-mono text-[9.5px] uppercase text-mint/40"><IcClock className="h-3.5 w-3.5" /> ocupado · convênio</span>
+                            <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase text-mint/70"><IcClock className="h-3.5 w-3.5" /> convênio externo</span>
                           ) : (
-                            <span className="flex items-center gap-1.5 font-mono text-[9.5px] uppercase text-jade"><IcCheck className="h-3.5 w-3.5" /> livre no app</span>
+                            <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase text-jade"><IcCheck className="h-3.5 w-3.5" /> livre no app</span>
                           )}
                         </div>
                       );
                     })}
                     {slotsDoDia(med, diaISO).length === 0 && (
-                      <p className="rounded-xl border border-dashed border-linedark px-4 py-8 text-center font-mono text-[11px] text-mint/45 sm:col-span-2">Sem jornada configurada neste dia.</p>
+                      <p className="rounded-xl border border-dashed border-linedark px-4 py-8 text-center font-mono text-[11px] font-semibold text-mint/60 sm:col-span-2">Sem jornada configurada neste dia.</p>
                     )}
                   </div>
                 </div>
@@ -195,8 +195,8 @@ export default function DoctorPanel() {
 
             {/* prontuário */}
             {sel && (
-              <div className="absolute inset-y-0 right-0 z-30 w-full max-w-[360px]">
-                <div className="pop-in flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-paper text-ink shadow-2xl">
+              <div className="fixed inset-0 z-50 flex items-end justify-center bg-abyss/75 p-3 backdrop-blur-sm sm:absolute sm:inset-y-0 sm:right-0 sm:z-30 sm:w-full sm:max-w-[360px] sm:items-stretch sm:p-0 sm:bg-transparent sm:backdrop-blur-none">
+                <div className="pop-in flex h-[88dvh] max-h-[620px] w-full flex-col overflow-hidden rounded-2xl border border-line bg-paper text-ink shadow-2xl sm:h-full sm:max-h-none">
                   <div className="flex items-center justify-between border-b border-line bg-cream/70 px-4 py-3">
                     <div>
                       <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink/45">prontuário simplificado</p>
@@ -213,15 +213,27 @@ export default function DoctorPanel() {
                     <textarea value={notas} onChange={(e) => setNotas(e.target.value)} rows={6}
                       placeholder="Queixas, exame físico, conduta, prescrição…"
                       className="mt-1.5 w-full resize-none rounded-xl border border-line bg-paper p-3 text-[13px] leading-relaxed outline-none focus:border-jade" />
-                    <button onClick={() => { dispatch({ t: "saveNotas", id: sel.id, texto: notas }); dispatch({ t: "toast", texto: "Prontuário salvo ✓" }); }}
+                    <button onClick={() => {
+                      dispatch({ t: "saveNotas", id: sel.id, texto: notas });
+                      dispatch({ t: "addAuditLog", quem: med.nome, perfil: "medico", acao: "Evolução do Prontuário", detalhes: `Registrou evolução de atendimento para ${sel.paciente}` });
+                      dispatch({ t: "toast", texto: "Prontuário salvo com sucesso ✓" });
+                    }}
                       className="mt-2 w-full rounded-xl bg-pine py-2.5 text-[13px] font-bold text-paper transition-colors hover:bg-jade">Salvar prontuário</button>
                     <p className="mt-4 font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink/45">Status da consulta</p>
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      <button onClick={() => { dispatch({ t: "setStatusAg", id: sel.id, status: "CONCLUIDO" }); dispatch({ t: "toast", texto: "Consulta concluída" }); }}
+                      <button onClick={() => {
+                        dispatch({ t: "setStatusAg", id: sel.id, status: "CONCLUIDO" });
+                        dispatch({ t: "addAuditLog", quem: med.nome, perfil: "medico", acao: "Consulta concluída", detalhes: `Atendimento finalizado com sucesso para ${sel.paciente}` });
+                        dispatch({ t: "toast", texto: "Consulta concluída ✓" });
+                      }}
                         className={`flex items-center justify-center gap-1.5 rounded-xl border-2 py-2.5 text-[12px] font-bold transition-colors ${sel.status === "CONCLUIDO" ? "border-jade bg-jadesoft text-jadedark" : "border-line text-ink/65 hover:border-jade/60"}`}>
                         <IcCheck className="h-4 w-4" /> Concluir
                       </button>
-                      <button onClick={() => { dispatch({ t: "setStatusAg", id: sel.id, status: "NAO_COMPARECEU" }); dispatch({ t: "toast", texto: "Falta registrada — alimenta o índice de no-show", tom: "info" }); }}
+                      <button onClick={() => {
+                        dispatch({ t: "setStatusAg", id: sel.id, status: "NAO_COMPARECEU" });
+                        dispatch({ t: "addAuditLog", quem: med.nome, perfil: "medico", acao: "Falta (No-show)", detalhes: `Marcou ausência/falta para ${sel.paciente}` });
+                        dispatch({ t: "toast", texto: "Falta registrada — alimenta índice de no-show", tom: "info" });
+                      }}
                         className={`flex items-center justify-center gap-1.5 rounded-xl border-2 py-2.5 text-[12px] font-bold transition-colors ${sel.status === "NAO_COMPARECEU" ? "border-coral bg-coralsoft text-coral" : "border-line text-ink/65 hover:border-coral/60"}`}>
                         <IcAlert className="h-4 w-4" /> Não veio
                       </button>

@@ -1,5 +1,5 @@
 /* ============================================================
-   FácilMed · modelo de dados + motor determinístico de agenda
+   AcolheMed · modelo de dados + motor determinístico de agenda
    (espelha o schema MySQL do projeto: usuarios, medicos,
     horarios_medico, agendamentos, fila_espera)
    ============================================================ */
@@ -12,7 +12,7 @@ export const DIA_LONGO: Record<DiaSemana, string> = {
 
 export interface Jornada { dia: DiaSemana; inicio: string; fim: string; duracao: number }
 export interface Especialidade { id: number; nome: string; cor: string; desc: string }
-export interface Medico { id: number; nome: string; crm: string; espId: number; valor: number; jornadas: Jornada[] }
+export interface Medico { id: number; nome: string; crm: string; espId: number; valor: number; unidade?: string; jornadas: Jornada[] }
 
 export type TipoPag = "CONVENIO" | "PARTICULAR";
 export type StatusAg = "AGENDADO" | "CONCLUIDO" | "CANCELADO" | "NAO_COMPARECEU";
@@ -20,7 +20,63 @@ export interface Relatorio { titulo: string; texto: string; emissao: string }
 export interface Agendamento {
   id: number; paciente: string; voce?: boolean; medicoId: number; dataISO: string; hora: string;
   tipo: TipoPag; carteirinha?: string; status: StatusAg; protocolo: string;
-  anotacoes?: string; encaixe?: boolean; relatorio?: Relatorio;
+  anotacoes?: string; encaixe?: boolean; relatorio?: Relatorio; confirmada?: boolean;
+}
+
+export interface AcessibilidadePreferencias {
+  textoMaior: boolean;
+  altoContraste: boolean;
+  botoesGrandes: boolean;
+  respostasFaladas: boolean;
+  modoSimplificado: boolean;
+  leitorDeTela: boolean;
+}
+
+export interface PacientePerfil {
+  nome: string;
+  nascimento: string;
+  cpf: string;
+  telefone: string;
+  email?: string;
+  senha?: string;
+  plano: string;
+  carteirinha?: string;
+  responsavelNome?: string;
+  responsavelTelefone?: string;
+  acessibilidade: AcessibilidadePreferencias;
+}
+
+export interface LembreteConfig {
+  aviso24h: boolean;
+  aviso2h: boolean;
+  avisoDia: boolean;
+  canalApp: boolean;
+  canalWhatsapp: boolean;
+  canalSMS: boolean;
+}
+
+export interface AuditEntry {
+  id: number;
+  quem: string;
+  perfil: "paciente" | "responsavel" | "secretaria" | "medico" | "admin" | "ia" | "sistema";
+  acao: string;
+  detalhes: string;
+  quando: string;
+  timestamp: number;
+}
+
+export interface DependenteResponsavel {
+  id: number;
+  nome: string;
+  parentesco: string;
+  cpf: string;
+  inicial: string;
+  proximaConsulta: string;
+  dataISO: string;
+  medicoNome: string;
+  hora: string;
+  status: "AGENDADO" | "CONFIRMADO" | "PENDENTE";
+  permissoes: Record<string, boolean>;
 }
 
 export type FilaStatus = "AGUARDANDO" | "NOTIFICADO" | "EXPIRADO" | "CONFIRMADO";
@@ -31,7 +87,7 @@ export interface FilaEntry {
 
 export interface Notif {
   id: number; titulo: string; texto: string; tipo: "vaga" | "lembrete" | "info" | "alerta";
-  lida: boolean; waitId?: number;
+  lida: boolean; waitId?: number; agId?: number; dataISO?: string; hora?: string;
 }
 export interface ToastMsg { id: number; texto: string; tom: "ok" | "erro" | "info" }
 
@@ -99,12 +155,12 @@ const j = (dias: DiaSemana[], inicio: string, fim: string, duracao = 30): Jornad
   dias.map((dia) => ({ dia, inicio, fim, duracao }));
 
 export const MEDICOS_SEED: Medico[] = [
-  { id: 1, nome: "Dra. Helena Duarte", crm: "CRM-SP 128.443", espId: 1, valor: 320, jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX"], "08:00", "13:00") },
-  { id: 2, nome: "Dra. Beatriz Nogueira", crm: "CRM-SP 97.210", espId: 2, valor: 220, jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX"], "13:00", "18:00") },
-  { id: 3, nome: "Dra. Camila Fontes", crm: "CRO-SP 44.812", espId: 3, valor: 180, jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX"], "09:00", "17:00", 45) },
-  { id: 4, nome: "Dr. Otávio Sampaio", crm: "CRM-SP 71.556", espId: 4, valor: 280, jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX", "SAB"], "08:00", "12:00") },
-  { id: 5, nome: "Dr. Ricardo Teles", crm: "CRM-SP 154.902", espId: 5, valor: 260, jornadas: j(["SEG", "QUA", "SEX"], "14:00", "19:00") },
-  { id: 6, nome: "Dra. Paula Serrano", crm: "CRM-SP 88.137", espId: 6, valor: 240, jornadas: [...j(["TER", "QUA", "QUI", "SEX"], "08:00", "14:00"), ...j(["SAB"], "08:00", "11:00")] },
+  { id: 1, nome: "Dra. Helena Duarte", crm: "CRM-SP 128.443", espId: 1, valor: 320, unidade: "Unidade Central", jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX"], "08:00", "13:00") },
+  { id: 2, nome: "Dra. Beatriz Nogueira", crm: "CRM-SP 97.210", espId: 2, valor: 220, unidade: "Unidade Paulista", jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX"], "13:00", "18:00") },
+  { id: 3, nome: "Dra. Camila Fontes", crm: "CRO-SP 44.812", espId: 3, valor: 180, unidade: "Unidade Central", jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX"], "09:00", "17:00", 45) },
+  { id: 4, nome: "Dr. Otávio Sampaio", crm: "CRM-SP 71.556", espId: 4, valor: 280, unidade: "Unidade Jardins", jornadas: j(["SEG", "TER", "QUA", "QUI", "SEX", "SAB"], "08:00", "12:00") },
+  { id: 5, nome: "Dr. Ricardo Teles", crm: "CRM-SP 154.902", espId: 5, valor: 260, unidade: "Unidade Paulista", jornadas: j(["SEG", "QUA", "SEX"], "14:00", "19:00") },
+  { id: 6, nome: "Dra. Paula Serrano", crm: "CRM-SP 88.137", espId: 6, valor: 240, unidade: "Unidade Central", jornadas: [...j(["TER", "QUA", "QUI", "SEX"], "08:00", "14:00"), ...j(["SAB"], "08:00", "11:00")] },
 ];
 
 /* ---------------- horários / ocupação ---------------- */
@@ -216,6 +272,86 @@ export const buildSeeds = () => {
   return { ags, fila, notifs };
 };
 
+export const PERFIL_INICIAL: PacientePerfil = {
+  nome: "Maria Aparecida da Silva",
+  nascimento: "1954-06-14",
+  cpf: "123.482.917-00",
+  telefone: "(11) 97123-4567",
+  email: "maria.aparecida@email.com",
+  senha: "••••••••",
+  plano: "Convênio Vida+",
+  carteirinha: "0042 8871 3345 09",
+  responsavelNome: "Ana Aparecida (Filha)",
+  responsavelTelefone: "(11) 98877-1024",
+  acessibilidade: {
+    textoMaior: false,
+    altoContraste: false,
+    botoesGrandes: false,
+    respostasFaladas: true,
+    modoSimplificado: false,
+    leitorDeTela: false,
+  },
+};
+
+export const LEMBRETES_INICIAL: LembreteConfig = {
+  aviso24h: true,
+  aviso2h: true,
+  avisoDia: true,
+  canalApp: true,
+  canalWhatsapp: true,
+  canalSMS: false,
+};
+
+export const DEPENDENTES_SEED: DependenteResponsavel[] = [
+  {
+    id: 1,
+    nome: "Maria Aparecida",
+    parentesco: "Mãe",
+    cpf: "123.482.917-00",
+    inicial: "MA",
+    proximaConsulta: "Cardiologia · Dra. Helena Duarte",
+    dataISO: addDaysISO(HOJE, 5),
+    medicoNome: "Dra. Helena Duarte",
+    hora: "09:30",
+    status: "PENDENTE",
+    permissoes: { "Visualizar": true, "Lembretes": true, "Confirmar presença": true, "Reagendar": true, "Cancelar": false },
+  },
+  {
+    id: 2,
+    nome: "José Ferreira da Silva",
+    parentesco: "Pai",
+    cpf: "098.765.432-11",
+    inicial: "JF",
+    proximaConsulta: "Ortopedia · Dr. Otávio Sampaio",
+    dataISO: addDaysISO(HOJE, 1),
+    medicoNome: "Dr. Otávio Sampaio",
+    hora: "10:00",
+    status: "CONFIRMADO",
+    permissoes: { "Visualizar": true, "Lembretes": true, "Confirmar presença": true, "Reagendar": true, "Cancelar": true },
+  },
+  {
+    id: 3,
+    nome: "Arthur Silva (Menor)",
+    parentesco: "Filho",
+    cpf: "456.123.789-22",
+    inicial: "AS",
+    proximaConsulta: "Pediatria · Dra. Paula Serrano",
+    dataISO: addDaysISO(HOJE, 3),
+    medicoNome: "Dra. Paula Serrano",
+    hora: "14:30",
+    status: "PENDENTE",
+    permissoes: { "Visualizar": true, "Lembretes": true, "Confirmar presença": true, "Reagendar": true, "Cancelar": true },
+  },
+];
+
+export const AUDITORIA_SEED: AuditEntry[] = [
+  { id: 1, quem: "Secretária · Ana", perfil: "secretaria", acao: "Confirmação", detalhes: "confirmou presença de Tereza Costa (08:30)", quando: "há 12 min", timestamp: Date.now() - 12 * 60000 },
+  { id: 2, quem: "IA · Lia (tool)", perfil: "ia", acao: "Reagendamento", detalhes: "reagendou Maria Aparecida 09:30 → 10:00 (autorizado)", quando: "há 41 min", timestamp: Date.now() - 41 * 60000 },
+  { id: 3, quem: "Secretária · Ana", perfil: "secretaria", acao: "Bloqueio de Agenda", detalhes: "bloqueou 4 horários de Dra. Helena (Congresso)", quando: "há 2 h", timestamp: Date.now() - 120 * 60000 },
+  { id: 4, quem: "Sistema · RN02", perfil: "sistema", acao: "Fila Sequencial", detalhes: "repassou vaga 11:30 ao 1º da fila após expiração da janela", quando: "há 3 h", timestamp: Date.now() - 180 * 60000 },
+  { id: 5, quem: "Secretária · Ana", perfil: "secretaria", acao: "Contato Rápido", detalhes: "registrou ligação para paciente Ana Beatriz (sem confirmação)", quando: "ontem", timestamp: Date.now() - 1440 * 60000 },
+];
+
 export const PACIENTE_DEMO = { nome: "Maria Aparecida", cpf: "***.482.917-**", plano: "Convênio Vida+", inicial: "MA" };
 
 /* orientações "o que levar" por especialidade (configuradas pela secretaria) */
@@ -236,7 +372,7 @@ export const RESPONSAVEL_SEED = {
     { acao: "Visualizar consultas", ok: true },
     { acao: "Receber lembretes", ok: true },
     { acao: "Confirmar presença", ok: true },
-    { acao: "Reagendar", ok: false },
+    { acao: "Reagendar", ok: true },
     { acao: "Cancelar", ok: false },
   ],
 };
@@ -244,3 +380,4 @@ export const RESPONSAVEL_SEED = {
 export const FUNCIONAMENTO = "segunda a sexta, 7h às 19h · sábado, 7h às 13h";
 export const ENDERECO_CLINICA = "Rua das Figueiras, 245 — Centro (ao lado da Farmácia São Lucas)";
 export const TEL_CLINICA = "(11) 4002-8922";
+

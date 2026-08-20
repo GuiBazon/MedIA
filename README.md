@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🩺 FácilMed
+# 🩺 AcolheMed
 
 **Sistema Inteligente e Acessível de Agendamento de Consultas**
 
@@ -18,7 +18,7 @@ Clínicas multiprofissionais sofrem com **linhas telefônicas ocupadas**, **rece
 
 ## 💡 A solução
 
-O **FácilMed** une três forças:
+O **AcolheMed** une três forças:
 
 1. **Uma secretária virtual que *faz*, não só conversa** — a agente **Lia** entende linguagem natural e executa ações reais via *Tool Calling* (agendar, remarcar, cancelar, confirmar, fila, orientações), sempre validadas pelas regras de negócio.
 2. **Uma fila de espera viva** — cada cancelamento notifica o 1º colocado, com janela de 60 minutos e repasse automático.

@@ -46,7 +46,7 @@ const Footer = () => (
         <div>
           <div className="flex items-center gap-2.5">
             <IcLogo className="h-9 w-9" />
-            <span className="font-display text-xl font-extrabold">Fácil<span className="text-jade">Med</span></span>
+            <span className="font-display text-xl font-extrabold">Acolhe<span className="text-jade">Med</span></span>
           </div>
           <p className="mt-4 max-w-sm text-[13.5px] leading-relaxed text-mint/65">
             Sistema inteligente de agendamento para clínicas multiprofissionais: secretária virtual com IA local,

@@ -1,7 +1,7 @@
-# FácilMed — Instruções do Projeto (resumo)
+# AcolheMed — Instruções do Projeto (resumo)
 
 ## O que é
-Protótipo demonstrativo do **FácilMed**: sistema de agendamento para clínicas multiprofissionais com **secretária virtual de IA** (simulando Ollama/Llama 3 local), **fila de espera inteligente**, **acessibilidade** (Modo Simplificado, Modo Voz, offline) e painéis para médico e gestão.
+Protótipo demonstrativo do **AcolheMed**: sistema de agendamento para clínicas multiprofissionais com **secretária virtual de IA** (simulando Ollama/Llama 3 local), **fila de espera inteligente**, **acessibilidade** (Modo Simplificado, Modo Voz, offline) e painéis para médico e gestão.
 
 > Tudo roda **100% no navegador** — sem backend real. Os dados vivem em um store React (useReducer) que espelha o schema MySQL do projeto.
 

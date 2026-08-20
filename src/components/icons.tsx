@@ -1,4 +1,4 @@
-/* Ícones autorais do FácilMed — traço 1.7, cantos arredondados, currentColor */
+/* Ícones autorais do AcolheMed — traço 1.7, cantos arredondados, currentColor */
 import React from "react";
 
 type P = { className?: string };

@@ -57,7 +57,7 @@ CREATE TABLE fila_espera (
   }]
 }`,
   "system.txt": `Você é a secretária virtual autônoma do aplicativo
-FácilMed. Sua função é atender pacientes, tirar dúvidas,
+AcolheMed. Sua função é atender pacientes, tirar dúvidas,
 verificar horários disponíveis e realizar agendamentos,
 cancelamentos e remarcações. Seja sempre acolhedora,
 objetiva e clara.
@@ -86,7 +86,7 @@ export default function PitchSection() {
           <Reveal>
             <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-mintdark">[ 07 · Pitch SENAI ]</p>
             <h2 className="mt-4 font-display text-3xl font-extrabold leading-[1.04] tracking-tight sm:text-5xl">
-              Por que o FácilMed<br />vence a recepção lotada
+              Por que o AcolheMed<br />vence a recepção lotada
             </h2>
             <p className="mt-5 max-w-md text-[15.5px] leading-relaxed text-mint/70">
               Uma plataforma que une <strong className="text-paper">acessibilidade extrema</strong> para a terceira idade com

@@ -26,7 +26,7 @@ export default function TopBar() {
         <a href="#demo" className="flex shrink-0 items-center gap-2.5" onClick={() => setMenu(false)}>
           <IcLogo className="h-8 w-8" />
           <span className="font-display text-lg font-extrabold tracking-tight">
-            Fácil<span className="text-jade">Med</span>
+            Acolhe<span className="text-jade">Med</span>
           </span>
         </a>
         <nav className="ml-6 hidden items-center gap-4 lg:flex">
