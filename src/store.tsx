@@ -41,6 +41,7 @@ export type Action =
   | { t: "setJornadas"; medicoId: number; jornadas: Medico["jornadas"] }
   | { t: "freeSlot"; key: string; medicoId: number; dataISO: string }
   | { t: "joinFila"; medicoId: number; dataISO: string; paciente: string; voce?: boolean }
+  | { t: "leaveFila"; waitId: number }
   | { t: "expireNow"; waitId: number }
   | { t: "confirmFila"; waitId: number }
   | { t: "tickFila" }
@@ -100,6 +101,8 @@ function reducer(s: State, a: Action): State {
       const pos = Math.max(0, ...daFila.map((f) => f.posicao)) + 1;
       return { ...s, fila: [...s.fila, { id: nid(), paciente: a.paciente, voce: a.voce, medicoId: a.medicoId, dataISO: a.dataISO, posicao: pos, status: "AGUARDANDO" }] };
     }
+    case "leaveFila":
+      return { ...s, fila: s.fila.filter((f) => f.id !== a.waitId) };
     case "expireNow":
       return { ...s, fila: s.fila.map((f) => (f.id === a.waitId && f.status === "NOTIFICADO" ? { ...f, janelaRestante: 0 } : f)) };
     case "confirmFila": {

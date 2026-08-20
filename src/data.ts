@@ -217,3 +217,30 @@ export const buildSeeds = () => {
 };
 
 export const PACIENTE_DEMO = { nome: "Maria Aparecida", cpf: "***.482.917-**", plano: "Convênio Vida+", inicial: "MA" };
+
+/* orientações "o que levar" por especialidade (configuradas pela secretaria) */
+export const ORIENTACOES: Record<number, string[]> = {
+  1: ["Jejum de 8h se houver coleta de exames", "Traga exames anteriores (ECG, eco, holter)", "Use roupas confortáveis", "Chegue 10 min antes para aferir a pressão"],
+  2: ["Jejum de 8h apenas se houver coleta de sangue", "Traga a lista de medicamentos em uso", "Documento com foto e carteirinha do convênio"],
+  3: ["Escove os dentes normalmente antes da consulta", "Traga radiografias anteriores, se tiver", "Evite alimentos com corantes 2h antes"],
+  4: ["Traga exames de imagem (raio-X, ressonância)", "Use roupas que facilitem a movimentação", "Anote onde dói e desde quando"],
+  5: ["Não use maquiagem na área a ser avaliada", "Evite cremes e ácidos na noite anterior", "Traga a lista de medicamentos em uso"],
+  6: ["Traga a caderneta de vacinação", "Anote sintomas, febre e medicações usadas", "A criança deve vir acompanhada do responsável"],
+};
+
+export const RESPONSAVEL_SEED = {
+  nome: "Ana Aparecida",
+  parentesco: "filha",
+  telefone: "(11) 98877-1024",
+  permissoes: [
+    { acao: "Visualizar consultas", ok: true },
+    { acao: "Receber lembretes", ok: true },
+    { acao: "Confirmar presença", ok: true },
+    { acao: "Reagendar", ok: false },
+    { acao: "Cancelar", ok: false },
+  ],
+};
+
+export const FUNCIONAMENTO = "segunda a sexta, 7h às 19h · sábado, 7h às 13h";
+export const ENDERECO_CLINICA = "Rua das Figueiras, 245 — Centro (ao lado da Farmácia São Lucas)";
+export const TEL_CLINICA = "(11) 4002-8922";

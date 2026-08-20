@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { ClinicProvider, useClinic } from "./store";
 import TopBar from "./components/TopBar";
 import Hero from "./components/Hero";
+import AiConsole from "./components/AiConsole";
+import FloatingLia from "./components/FloatingLia";
 import DoctorPanel from "./components/DoctorPanel";
 import AdminPanel from "./components/AdminPanel";
 import RulesSection from "./components/RulesSection";
@@ -59,7 +61,7 @@ const Footer = () => (
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-mintdark">Navegue</p>
           <ul className="mt-4 space-y-2.5">
-            {[["#demo", "Demo do app do paciente"], ["#medico", "Painel do médico"], ["#gestao", "Gestão & fila de espera"], ["#regras", "Regras de negócio"], ["#pitch", "Pitch SENAI"]].map(([h, l]) => (
+            {[["#ia", "Central de ajuda · IA"], ["#demo", "Demo do app do paciente"], ["#medico", "Painel do médico"], ["#gestao", "Gestão & fila de espera"], ["#acessibilidade", "Voz, offline & responsável"], ["#secretaria", "Secretaria & automação"], ["#regras", "Regras de negócio"], ["#pitch", "Pitch SENAI"]].map(([h, l]) => (
               <li key={h}><a href={h} className="text-[13.5px] text-mint/75 transition-colors hover:text-jade">{l}</a></li>
             ))}
           </ul>
@@ -88,6 +90,7 @@ export default function App() {
         <TopBar />
         <main>
           <Hero />
+          <AiConsole />
           <DoctorPanel />
           <AdminPanel />
           <AcessibilidadeSection />
@@ -96,6 +99,7 @@ export default function App() {
           <PitchSection />
         </main>
         <Footer />
+        <FloatingLia />
         <Toasts />
       </div>
     </ClinicProvider>

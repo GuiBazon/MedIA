@@ -3,7 +3,7 @@ import { useClinic } from "../store";
 import { HOJE, isBusyExterno, slotsDoDia } from "../data";
 import { CountUp, Ecg, Reveal, Ticker, Underline } from "./ui";
 import PhoneApp from "./PhoneApp";
-import { IcCheck, IcChip, IcPhone, IcQueue, IcShield } from "./icons";
+import { IcCheck, IcChevR, IcChip, IcPhone, IcQueue, IcShield, IcSpark } from "./icons";
 
 export default function Hero() {
   const { state } = useClinic();
@@ -75,6 +75,19 @@ export default function Hero() {
                 </li>
               ))}
             </ul>
+          </Reveal>
+
+          <Reveal delay={260}>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a href="#ia" className="group flex items-center gap-2 rounded-xl bg-jade px-5 py-3 font-display text-[15px] font-extrabold text-paper shadow-lg shadow-jade/25 transition-all hover:-translate-y-0.5 hover:bg-jadedark">
+                <IcSpark className="h-4.5 w-4.5" />
+                Conversar com a Lia
+                <IcChevR className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </a>
+              <a href="#regras" className="rounded-xl border border-line bg-paper px-5 py-3 font-display text-[15px] font-bold text-ink/70 transition-colors hover:border-jade hover:text-jade">
+                Ver as 3 regras
+              </a>
+            </div>
           </Reveal>
 
           {/* vitais ao vivo */}

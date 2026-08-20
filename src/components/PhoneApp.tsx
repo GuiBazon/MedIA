@@ -392,7 +392,7 @@ export default function PhoneApp() {
     <div className={`relative mx-auto w-full max-w-[350px] ${simp ? "simp" : ""}`}>
       {/* moldura */}
       <div className="rounded-[2.7rem] border border-ink/20 bg-deep p-[9px] shadow-[0_36px_80px_-24px_rgba(10,33,28,0.55)]">
-        <div className="relative flex h-[600px] flex-col overflow-hidden rounded-[2.15rem] bg-paper sm:h-[640px]">
+        <div className="relative flex h-[min(600px,78dvh)] flex-col overflow-hidden rounded-[2.15rem] bg-paper sm:h-[min(640px,80dvh)]">
           {/* notch + statusbar */}
           <div className="relative z-40 flex items-center justify-between bg-paper px-6 pb-1 pt-2.5">
             <span className="absolute left-1/2 top-1.5 h-5 w-24 -translate-x-1/2 rounded-full bg-deep" />
