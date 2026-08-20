@@ -2,110 +2,194 @@
 
 # 🩺 AcolheMed
 
-**Sistema Inteligente e Acessível de Agendamento de Consultas**
+### **Sistema Inteligente e Inclusivo de Agendamento em Saúde**
+*Secretária Virtual com IA Local · Fila de Espera Viva · Acessibilidade Radical · Gestão Integrada*
 
-Secretária virtual com IA local · Fila de espera inteligente · Acessibilidade radical · Painéis médico e de gestão
+[![React](https://img.shields.io/badge/React-18.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-6.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Local AI](https://img.shields.io/badge/AI-Ollama%20%7C%20Llama%203-FF6F00?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com/)
+[![Acessibilidade](https://img.shields.io/badge/WCAG-AAA%20Inclusivo-0C8A64?style=for-the-badge)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
-`SENAI — Projeto Integrador` · `Protótipo demonstrativo 100% funcional`
+<br />
+
+[**Explorar Demonstração**](#-roteiro-de-demonstração-ao-vivo) •
+[**Pilares da Solução**](#-pilares-da-solução) •
+[**Arquitetura**](#-arquitetura-e-fluxo-de-dados) •
+[**Como Rodar**](#-como-rodar-o-projeto) •
+[**Plano de Evolução**](./suggest.md)
 
 </div>
 
 ---
 
-## 🎯 O problema
+## 📌 Visão Geral
 
-Clínicas multiprofissionais sofrem com **linhas telefônicas ocupadas**, **recepção sobrecarregada**, **no-show de até 30%** e **filas de espera estáticas** que não recuperam horários cancelados. Idosos e pessoas com deficiência ficam de fora da saúde digital por interfaces inacessíveis.
+O **AcolheMed** é uma plataforma moderna desenvolvida para resolver os maiores gargalos do atendimento ambulatorial e clínicas multiprofissionais:
+- **Linhas telefônicas congestionadas** e sobrecarga das recepcionistas;
+- **Altas taxas de absenteísmo (*no-show*)** que atingem até 30% nas clínicas populares;
+- **Cancelamentos de última hora** que deixam horários médicos ociosos sem tempo hábil de remanejamento;
+- **Exclusão digital de idosos e PcDs** devido a interfaces complexas e inacessíveis.
 
-## 💡 A solução
-
-O **AcolheMed** une três forças:
-
-1. **Uma secretária virtual que *faz*, não só conversa** — a agente **Lia** entende linguagem natural e executa ações reais via *Tool Calling* (agendar, remarcar, cancelar, confirmar, fila, orientações), sempre validadas pelas regras de negócio.
-2. **Uma fila de espera viva** — cada cancelamento notifica o 1º colocado, com janela de 60 minutos e repasse automático.
-3. **Acessibilidade de verdade** — Modo Simplificado (terceira idade), Modo Voz (pessoas cegas, com reconhecimento de fala e TTS reais do navegador), modo offline e perfil de responsável autorizado.
-
-> 🔒 **Privacidade por arquitetura:** a IA roda *localmente* (simulando Ollama + Llama 3 no servidor da clínica) — nenhum dado de saúde sai do prédio.
+A plataforma integra uma **secretária virtual autônoma (Lia)** com *function calling*, **fila de espera sequencial em tempo real**, **modo de voz bidirecional** e painéis operacionais para médicos e administradores.
 
 ---
 
-## ✨ Funcionalidades por perfil
+## 🌟 Pilares da Solução
 
-| Perfil | O que tem no protótipo |
+```mermaid
+graph TD
+    A[AcolheMed] --> B[🤖 IA Secretária Lia]
+    A --> C[⏳ Fila Sequencial RN02]
+    A --> D[♿ Acessibilidade Radical]
+    A --> E[🛡️ Travas de Integridade]
+
+    B --> B1[Function Calling Local]
+    B --> B2[Zero Custo de Nuvem & LGPD]
+    
+    C --> C1[Notificação 1 a 1]
+    C --> C2[Janela de 60 Minutos]
+    
+    D --> D1[Modo Simplificado Idosos]
+    D --> D2[Modo Voz STT/TTS]
+    D --> D3[Offline First & Responsável]
+    
+    E --> E1[RN01 · Trava 30 Minutos]
+    E --> E2[RN03 · SELECT FOR UPDATE]
+```
+
+### 1. 🤖 Secretária Virtual com IA Local (Lia)
+- **Execução Determinística (*Function Calling*):** A IA não é apenas um chatbot conversacional; ela executa 10 ferramentas de backend diretamente no banco de dados (`agendar_consulta`, `cancelar_consulta`, `reagendar_consulta`, `confirmar_consulta`, `buscar_horarios`, `buscar_consulta`, `buscar_orientacoes`, `buscar_responsavel`, `inserir_fila_espera`, `consultar_fila`).
+- **Privacidade Total & Custo Zero (LGPD):** Simulada para rodar em servidores locais (Ollama + Llama 3). Nenhum dado clínico ou sensível do paciente sai da infraestrutura física da clínica.
+
+### 2. ⏳ Fila de Espera Sequencial Inteligente (RN02)
+- **Recuperação de Vagas:** Quando uma consulta é cancelada, o sistema notifica **apenas o 1º colocado** da fila de espera em vez de disparar mensagens em massa.
+- **Janela de Decisão:** O paciente tem 60 minutos para confirmar ou recusar a vaga pelo aplicativo. Se expirar, a oportunidade é automaticamente repassada para o próximo da fila, mantendo a ocupação médica sempre otimizada.
+
+### 3. ♿ Acessibilidade Radical & Inclusão
+- **Modo Simplificado:** Interface com tipografia ampliada, botões com alvos de toque gigantes, alto contraste e fluxo reduzido, pensado especialmente para idosos.
+- **Modo Voz Completo:** Operação 100% por voz utilizando a *Web Speech API* nativa (reconhecimento de fala e síntese de voz em português pt-BR), permitindo navegação completa para deficientes visuais.
+- **Modo Offline Resiliente:** Cache inteligente de comprovantes, instruções de preparo de exames e contatos de emergência mesmo sem conexão com a internet.
+- **Gestão de Dependentes/Responsável:** Permite que cuidadores e familiares acompanhem consultas com controle granular de permissões aprovadas pelo titular.
+
+### 4. 🛡️ Regras de Negócio e Travas de Integridade
+- **RN01 (Trava de 30 Minutos):** Cancelamentos e remarcações automáticas são permitidos até 30 minutos antes do horário agendado. Dentro da janela crítica, o app bloqueia e direciona para a recepção humana, protegendo a agenda médica.
+- **RN03 (Prevenção de Concorrência Transacional):** Controle transacional equivalente a `SELECT ... FOR UPDATE`, garantindo que dois pacientes nunca reservem simultaneamente a mesma vaga.
+
+---
+
+## 📱 Telas e Módulos do Sistema
+
+| Módulo / Perfil | Descrição & Funcionalidades |
 |---|---|
-| 👤 **Paciente** | Fluxo visual de agendamento (especialidade → médico → calendário com semáforo → horários → convênio/particular → comprovante com QR), consultas futuras/passadas, relatórios médicos, notificações com ação, Modo Simplificado alternável |
-| 🤖 **Lia (IA)** | 10 tools (`agendar_consulta`, `cancelar_consulta`, `reagendar_consulta`, `confirmar_consulta`, `buscar_horarios`, `buscar_consulta`, `buscar_orientacoes`, `buscar_responsavel`, `inserir_fila_espera`, `consultar_fila`), datas/horários flexíveis, sugestões automáticas, trava RN01, fallback acolhedor |
-| 🧑‍⚕️ **Médico** | Agenda semanal/diária sincronizada com o app, prontuário simplificado com evolução salvável, status de comparecimento |
-| 🏥 **Gestão/Secretaria** | Ocupação ao vivo, jornadas editáveis por médico/dia, cadastro de médicos, **fila RN02 com simulador de desistência**, confirmações com contato rápido, bloqueio de médico com pacientes afetados, "o que levar" por especialidade, retorno automático, absenteísmo e auditoria |
-| 🤝 **Responsável** | Acompanhamento com permissões granulares validadas pela API |
-| 🙈 **Acessibilidade** | Modo Voz (STT pt-BR + TTS via Web Speech API), tela única centrada na IA, confirmações obrigatórias em ações críticas, modo offline com bloqueios explicados |
+| 📱 **App do Paciente** | Wizard intuitivo de agendamento por especialidade e médico, calendário visual com semáforo de ocupação, emissão de comprovantes com QR Code, orientações de exames e histórico. |
+| 💬 **Central da IA (Lia)** | Console de atendimento inteligente com suporte a voz, atalhos contextuais rápidos e monitoramento em tempo real de chamadas de ferramentas (*tool calls*). |
+| 🧑‍⚕️ **Painel do Médico** | Visualização diária e semanal de atendimentos, prontuário com evolução clínica editável e marcação rápida de status (Concluído / Não Compareceu). |
+| 🏥 **Painel de Gestão** | Dashboard com taxas de ocupação, absenteísmo, simulador interativo de desistências da fila RN02, gestão de jornadas por médico e log de auditoria de ações. |
+| 🎙️ **Laboratório de Acessibilidade** | Simuladores interativos do Modo Voz, Modo Offline inteligente e painel de permissões de responsáveis autorizados. |
+| ⚙️ **Secretaria & Automação** | Confirmação automatizada de presença, bloqueio emergencial de agendas com notificação de pacientes impactados e checklist "O Que Levar". |
 
 ---
 
-## 📏 Regras de negócio implementadas
+## 🛠️ Tecnologias Utilizadas
 
-| Regra | Comportamento | Onde testar |
-|---|---|---|
-| **RN01** · Trava de cancelamento tardio | Cancelar/remarcar exige ≥ 30 min de antecedência; abaixo disso, bloqueia e orienta contato humano | A consulta de encaixe da Maria (~12 min) no app ou via Lia |
-| **RN02** · Fila de espera sequencial | Vaga aberta → só o 1º é notificado → janela de 60 min (demo: 1s = 1 min) → expira → repassa | Gestão → "Simular desistência"; Dr. Otávio tem dias propositalmente lotados |
-| **RN03** · Prevenção de conflito | Horário ocupado nunca é confirmado; corrida transacional simulada no 1º horário livre do wizard | Agende pelo fluxo visual e veja o aviso |
+- **Frontend:** [React 18](https://react.dev/) + [TypeScript 5](https://www.typescriptlang.org/)
+- **Estilização:** [Tailwind CSS v4](https://tailwindcss.com/) + Variáveis de Design Tokens personalizadas
+- **Build & Dev:** [Vite 6](https://vitejs.dev/)
+- **Animações & Interatividade:** [Framer Motion](https://www.framer.com/motion/) + Canvas Confetti
+- **Ícones:** Ícones autorais em SVG customizados com traço adaptável
+- **Voz & IA:** Web Speech API (STT/TTS) + Arquitetura de Tool Calling compatível com Ollama (Llama 3)
+- **Especificação de Backend:** Node.js · Express · MySQL 8 (com isolamento transacional `FOR UPDATE`)
 
 ---
 
-## 🚀 Como rodar
+## 🚀 Como Rodar o Projeto
+
+### Pré-requisitos
+- [Node.js](https://nodejs.org/) versão 18.0 ou superior
+- Gerenciador de pacotes `npm` ou `yarn`
+
+### Passo a passo
 
 ```bash
+# 1. Clone o repositório
+git clone https://github.com/GuiBazon/AcolheMed.git
+
+# 2. Acesse a pasta do projeto
+cd AcolheMed
+
+# 3. Instale as dependências
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # gera dist/
+
+# 4. Inicie o servidor de desenvolvimento
+npm run dev
 ```
 
-**Stack:** React 18 · TypeScript · Vite · Tailwind CSS v4 · Web Speech API · (especificação de backend: Node.js + Express + MySQL 8 + Ollama)
+Abra seu navegador em [http://localhost:5173](http://localhost:5173) para explorar a aplicação.
+
+### Scripts Disponíveis
+- `npm run dev`: Inicia o ambiente de desenvolvimento com Hot Module Replacement.
+- `npm run build`: Compila o projeto otimizado para produção na pasta `dist/`.
+- `npm run typecheck`: Executa a checagem de tipos com o compilador TypeScript.
 
 ---
 
-## 🗂 Estrutura do código
+## 🧪 Roteiro de Demonstração ao Vivo
+
+Para avaliar as principais funcionalidades em menos de 3 minutos:
+
+1. **Agendamento por Conversa:** Clique no botão flutuante da Lia ou vá até a Central da IA e digite: *"Quero marcar cardiologia amanhã de manhã pelo convênio"*.
+2. **Validação da Trava RN01:** No chat ou no app, tente cancelar a consulta de encaixe da Maria (marcada para os próximos minutos). O sistema barrará e fornecerá o contato da recepção.
+3. **Fila Viva (RN02):** Na seção de Gestão, clique em **"Simular desistência"**. Observe a notificação no smartphone, o cronômetro da janela de 60s e confirme a vaga.
+4. **Interação por Voz:** Na seção de Acessibilidade, ative o Modo Voz pelo microfone e pergunte: *"Qual minha próxima consulta?"* (recomendado Google Chrome).
+5. **Modo Simplificado:** Na aba "Perfil" dentro do celular demonstrativo, ative o Modo Simplificado e veja a interface se reconfigurar.
+
+---
+
+## 📁 Estrutura de Diretórios
 
 ```
-src/
-├── data.ts                     # modelo de dados, seeds, ocupação determinística (hash)
-├── store.tsx                   # estado global + ações (RN02, notificações, fila)
-├── App.tsx                     # composição da página + toasts + rodapé
-└── components/
-    ├── Chat.tsx                # cérebro da Lia: intenções, parsers, tools, fluxos
-    ├── PhoneApp.tsx            # app do paciente dentro do smartphone
-    ├── AiConsole.tsx           # Central de IA + log de tool calls ao vivo
-    ├── FloatingLia.tsx         # botão flutuante global
-    ├── DoctorPanel.tsx         # painel do médico
-    ├── AdminPanel.tsx          # gestão + fila RN02
-    ├── AcessibilidadeSection.tsx   # voz, offline, responsável
-    ├── AutomacaoSection.tsx    # secretaria & automação
-    ├── RulesSection.tsx        # RN01/RN02/RN03 com diagramas
-    ├── PitchSection.tsx        # pitch + schema.sql / tools.json / system.txt
-    ├── icons.tsx · ui.tsx      # ícones SVG autorais e utilitários de movimento
+AcolheMed/
+├── src/
+│   ├── components/
+│   │   ├── AcessibilidadeSection.tsx # Simuladores de Voz, Offline e Responsável
+│   │   ├── AdminPanel.tsx            # Gestão da clínica e simulador da fila RN02
+│   │   ├── AiConsole.tsx             # Central de IA com visualização de Tool Calls
+│   │   ├── AutomacaoSection.tsx      # Confirmações, bloqueios e auditoria
+│   │   ├── Chat.tsx                  # Mecanismo de NLP, IA, Parsers e 10 Tools
+│   │   ├── DoctorPanel.tsx           # Agenda e prontuário médico
+│   │   ├── FloatingLia.tsx           # Botão flutuante global da assistente
+│   │   ├── Hero.tsx                  # Seção principal de apresentação com vitais
+│   │   ├── PhoneApp.tsx              # Simulador do aplicativo mobile do paciente
+│   │   ├── PitchSection.tsx          # Pitch comercial, schema SQL e especificações
+│   │   ├── RulesSection.tsx          # Demonstração visual das regras RN01/RN02/RN03
+│   │   ├── TopBar.tsx                # Cabeçalho de navegação responsivo
+│   │   ├── icons.tsx                 # Ícones autorais em SVG
+│   │   └── ui.tsx                    # Componentes utilitários de UI e animações
+│   ├── data.ts                       # Schema de dados, médicos, jornadas e ocupação
+│   ├── store.tsx                     # Gerenciamento de estado global e regras RN02
+│   ├── index.css                     # Configurações de tema e estilos globais
+│   ├── main.tsx                      # Ponto de entrada React
+│   └── App.tsx                       # Estrutura principal da página
+├── instrucoes.md                     # Guia rápido de testes e especificação das regras
+├── suggest.md                        # Plano de evolução e arquitetura de produção (21 iniciativas)
+└── package.json                      # Dependências e scripts do projeto
 ```
 
 ---
 
-## 🧪 Roteiro rápido de demonstração (3 minutos)
+## 📄 Documentação Complementar
 
-1. **Agende com uma frase** → clique no botão verde da Lia → *"quero marcar cardiologia amanhã de manhã pelo convênio"*.
-2. **Veja a regra barrar** → *"quero cancelar minha consulta"* (a de hoje está a menos de 30 min → RN01).
-3. **A fila anda sozinha** → Gestão → "Simular desistência" → notificação no celular → confirme a vaga em 60 s.
-4. **Acessibilidade** → seção Acessibilidade → ative o microfone e diga *"qual minha próxima consulta?"* (Chrome).
-5. **Modo Simplificado** → aba Perfil no telefone → toque em "Ativar".
-
----
-
-## 📚 Documentação
-
-- [`instrucoes.md`](./instrucoes.md) — guia resumido do projeto, estrutura e onde testar cada regra.
-- O *system prompt* da agente, o `schema.sql` e o `tools.json` estão na seção **Pitch** da página.
+- 📖 [**Guia de Instruções & Testes**](./instrucoes.md): Detalhamento técnico de como cada fluxo e regra de negócio opera.
+- 📋 [**Plano de Melhorias & Evolução**](./suggest.md): Planejamento detalhado com 21 iniciativas para transição para ambiente hospitalar/produção.
 
 ---
 
 <div align="center">
 
-**Equipe** · Projeto Integrador SENAI 2026
-*Protótipo demonstrativo — todos os dados são fictícios.*
+**Projeto Integrador SENAI 2026** · *Protótipo Conceitual e Demonstrativo*
+
+Desenvolvido com foco em **impacto social, acessibilidade e inovação em saúde pública e privada**.
 
 </div>

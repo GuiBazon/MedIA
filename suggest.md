@@ -1,199 +1,127 @@
-# 📋 Plano de Melhorias, Refatorações e Evolução do AcolheMed
+# 📋 Plano de Evolução, Arquitetura de Produção e Roadmap — AcolheMed
 
-Este documento consolida uma análise técnica, clínica e de produto com **21 iniciativas detalhadas** de melhorias, refatorações arquiteturais, novos módulos e expansão de funcionalidades para o ecossistema **AcolheMed**.
+Este documento estabelece o plano de engenharia de software, segurança clínica e maturidade de produto com **21 iniciativas estratégicas** divididas em 6 frentes fundamentais para elevar o protótipo **AcolheMed** a um sistema hospitalar em escala de produção.
 
 ---
 
-## 🏗️ 1. Arquitetura, Backend & Dados (Transição para Produção)
+## 🗺️ Visão Geral do Roadmap
 
-### 🔹 1.1. Backend Real & Camada de API (Node.js / Fastify / NestJS)
-- [ ] **Migração do Mock State para API RESTful / GraphQL:**
-  - Substituir o estado local em memória (`store.tsx`) por uma API Node.js/TypeScript estruturada.
-  - Endpoints padronizados para autenticação, consultas, fila de espera, médicos e auditoria.
-- [ ] **Banco de Dados Relacional com ORM (PostgreSQL / MySQL + Prisma / Drizzle):**
-  - Implementar o schema relacional consolidado no pitch (`pacientes`, `responsaveis`, `medicos`, `agendamentos`, `fila_espera`, `logs_auditoria`).
-  - Criação de índices compostos em `(medico_id, data, hora)` e `(paciente_id, status)` para consultas instantâneas.
+```mermaid
+gantt
+    title Roadmap de Evolução AcolheMed (Fases de Implementação)
+    dateFormat  YYYY-MM
+    section 1. Backend & Dados
+    API RESTful + PostgreSQL / Prisma :2026-01, 2026-03
+    Concorrência Real (SELECT FOR UPDATE) :2026-02, 2026-04
+    Workers Redis / BullMQ (Fila RN02) :2026-03, 2026-05
+    section 2. IA & LLM
+    Ollama Llama 3.3 / Qwen 2.5 Local :2026-02, 2026-04
+    RAG de Preparo & Guardrails NeMo :2026-04, 2026-06
+    Hotword "Ei Lia" & TTS Streaming :2026-05, 2026-07
+    section 3. Acessibilidade
+    Integração com VLibras 3D :2026-03, 2026-05
+    Certificação WCAG 2.2 AAA :2026-04, 2026-06
+    section 4. Integrações
+    WhatsApp Cloud API & Twilio :2026-05, 2026-08
+    Interoperabilidade HL7 / FHIR :2026-06, 2026-09
+```
+
+---
+
+## 🏗️ 1. Arquitetura, Backend & Camada de Dados
+
+### 🔹 1.1. Transição do Mock State para API RESTful / GraphQL
+- [ ] **Arquitetura em Camadas (NestJS ou Fastify + TypeScript):**
+  - Migrar a lógica contida em `store.tsx` e `Chat.tsx` para serviços desacoplados no backend (`SchedulingService`, `QueueService`, `PatientService`, `AuditService`).
+  - Implementação de DTOs rigorosos validados via `Zod` / `class-validator`.
+- [ ] **Banco de Dados Relacional com ORM (PostgreSQL 16 + Prisma / Drizzle):**
+  - Implementar schema relacional com chaves estrangeiras, constraints e índices compostos em `(medico_id, data_hora)` e `(paciente_id, status)`.
 - [ ] **Garantia de Concorrência Transacional Real (RN03):**
-  - Execução de transações `SERIALIZABLE` ou queries com `SELECT ... FOR UPDATE` no banco para garantir que dois pacientes nunca reservem o mesmo slot simultaneamente.
+  - Implementação de nível de isolamento `REPEATABLE READ` / `SERIALIZABLE` ou queries explícitas com `SELECT ... FOR UPDATE` para assegurar que colisões simultâneas de horários sejam tratadas atomicamente.
 
-### 🔹 1.2. Processamento Assíncrono & Filas (Redis + BullMQ)
-- [ ] **Motor da Fila de Espera (RN02):**
-  - Gerenciamento da janela de 60 minutos através de workers assíncronos no Redis (evitando depender do timer do frontend).
-  - Notificação automática do 2º colocado caso o 1º expire.
-- [ ] **Disparo Automatizado de Lembretes:**
-  - Cron jobs agendados para 24h e 2h antes da consulta para coleta de confirmação de presença.
+### 🔹 1.2. Processamento Assíncrono e Mensageria (Redis + BullMQ)
+- [ ] **Gerenciamento do Motor da Fila de Espera (RN02):**
+  - Substituição dos timers de frontend por jobs assíncronos agendados no Redis com TTL exato de 60 minutos.
+  - Repasse automatizado de notificação para o 2º colocado caso a janela do 1º colocado expire sem confirmação.
+- [ ] **Disparador de Lembretes & Confirmação Ativa:**
+  - Agendamento de cron jobs para envio de notificações 24h e 2h antes de cada consulta, solicitando confirmação de presença (redução de *no-show*).
 
-### 🔹 1.3. Segurança, Autenticação & LGPD
+### 🔹 1.3. Segurança, Autenticação e LGPD / HIPAA
 - [ ] **Autenticação Segura & Biometria:**
-  - JWT com Refresh Tokens em cookies `HttpOnly` + autenticação biométrica (FaceID / TouchID / WebAuthn).
-- [ ] **Criptografia de Prontuários e Dados Sensíveis (LGPD / HIPAA):**
-  - Criptografia em repouso (AES-256) dos campos de evolução médica e relatórios.
+  - Autenticação via JWT com Refresh Tokens em cookies `HttpOnly` seguros.
+  - Suporte a WebAuthn / Passkeys para autenticação biométrica em dispositivos móveis.
+- [ ] **Criptografia de Dados Sensíveis:**
+  - Criptografia em repouso (AES-256) para prontuários, evoluções médicas e dados de identificação do paciente (LGPD Art. 13).
 - [ ] **Controle de Acesso Baseado em Papéis (RBAC):**
-  - Validação estrita de permissões de dependentes/acompanhantes antes de qualquer operação de cancelamento ou visualização de prontuário.
+  - Middleware de autorização para validar estritamente as permissões concedidas a dependentes/cuidadores antes de permitir ações de reagendamento ou cancelamento.
 
 ---
 
 ## 🤖 2. Inteligência Artificial & Agente de Voz (Lia)
 
-### 🔹 2.1. Integração com LLM Local (Ollama / vLLM)
-- [ ] **Function Calling Estruturado (JSON Schema):**
-  - Integração via endpoint real com Ollama rodando Llama 3.3 8B ou Qwen 2.5 7B, usando schema JSON rígido para as 10 tools.
-- [ ] **RAG (Retrieval-Augmented Generation) para Dúvidas Clínicas:**
-  - Banco vetorial local (ChromaDB / Qdrant) com termos de preparo de exames, convênios aceitos, especialidades e regras da clínica.
+### 🔹 2.1. Integração com LLM Local de Produção
+- [ ] **Servidor de Inferência Local (Ollama / vLLM / llama.cpp):**
+  - Conexão via endpoint interno com Llama 3.3 8B Instruct ou Qwen 2.5 7B, rodando com quantização (GGUF / AWQ) em GPU dedicada na clínica.
+  - Schema de *Function Calling* padronizado para as 10 tools com validação estrita de tipos no retorno.
+- [ ] **RAG (Retrieval-Augmented Generation) para Orientações Clínicas:**
+  - Banco vetorial local (Qdrant / ChromaDB) indexando manuais de preparo de exames, especialidades, convênios atendidos e políticas internas da clínica.
 - [ ] **Guardrails Médicos de Segurança (NeMo Guardrails):**
-  - Regra estrita para nunca emitir diagnósticos conclusivos nem prescrever medicamentos, redirecionando emergências para o SAMU 192.
+  - Filtros rígidos para impedir que o modelo forneça diagnósticos conclusivos, receite fármacos ou interprete exames, redirecionando urgências para o SAMU 192.
 
-### 🔹 2.2. Aprimoramento da Experiência de Voz
-- [ ] **Detecção de Palavra de Ativação (Hotword Detection - "Ei Lia"):**
-  - Permitir iniciar a conversa por voz sem tocar na tela, ideal para pessoas com deficiência visual severa ou motora.
-- [ ] **Streaming de Áudio (TTS em Tempo Real):**
-  - Síntese de voz com streaming por chunks (áudio começa a tocar antes do texto terminar de ser gerado, reduzindo a latência percebida para < 400ms).
+### 🔹 2.2. Aprimoramento da Experiência por Voz
+- [ ] **Detecção de Palavra de Ativação (*Hotword Detection*):**
+  - Ativação hands-free via modelo de wake-word leve ("Ei Lia"), permitindo início do atendimento sem necessidade de toque na tela.
+- [ ] **Streaming de Áudio em Tempo Real:**
+  - Síntese de fala por streaming via WebSocket com latência inferior a 350ms, proporcionando conversação natural e fluida.
 
 ---
 
 ## ♿ 3. Acessibilidade & Inclusão (WCAG 2.2 Nível AAA)
 
 - [ ] **Integração com VLibras:**
-  - Widget integrado com avatar 3D para tradução automática em Língua Brasileira de Sinais (Libras) para pacientes surdos.
-- [ ] **Modo Alto Contraste Personalizável:**
-  - Opções de temas de alto contraste (Amarelo no Preto, Branco no Preto, Azul Acessível).
-- [ ] **Navegação por Teclado e Foco Acessível:**
-  - Focus trap em todos os modais e atalhos rápidos de teclado (`Alt + 1` Início, `Alt + 2` IA, `Alt + 3` Consultas).
-- [ ] **Feedback Háptico (Vibração no Celular):**
-  - Vibrações distintas para confirmação de consulta, erro de concorrência e aviso de vaga na fila de espera.
+  - Widget integrado com avatar 3D para tradução automática em tempo real para a Língua Brasileira de Sinais (Libras), garantindo acessibilidade para pacientes surdos.
+- [ ] **Temas de Alto Contraste Personalizáveis:**
+  - Modos Amarelo/Preto, Branco/Preto e Azul/Amarelo com contraste superior a 7:1 em todos os elementos interativos.
+- [ ] **Navegação Integral por Teclado e Leitores de Tela:**
+  - Compatibilidade e testes com NVDA, JAWS e VoiceOver, com landmarks semânticos e atributos `aria-live` em todas as alterações dinâmicas de estado.
 
 ---
 
-## 📱 4. Experiência Mobile & Aplicativo Nativo
+## 📱 4. Aplicativo Mobile Nativo (React Native / Expo)
 
-- [ ] **Empacotamento Nativo (React Native / Expo):**
-  - Publicação nas lojas App Store e Google Play com acesso nativo à câmera (leitura de QR Code da carteirinha) e notificações Push em segundo plano.
-- [ ] **PWA Offline Completo com Service Worker + IndexedDB:**
-  - Armazenamento em cache local criptografado para que o paciente consulte endereço, carteirinha e relatórios mesmo em "Modo Avião" ou sem sinal.
-- [ ] **Check-in Automático por Proximidade (Geofencing / GPS):**
-  - Ao chegar a 100 metros da clínica no dia da consulta, o app pergunta por notificação: *"Você chegou! Deseja confirmar presença na recepção?"*.
-- [ ] **Integração com Calendários Nativos:**
-  - Botão de *"Adicionar ao Google Agenda / Apple Calendar"* com download de arquivo `.ics`.
+- [ ] **Migração do Simulador para App Nativo:**
+  - Compilação do app para Android e iOS utilizando **Expo Application Services (EAS)** e React Native.
+- [ ] **Notificações Push Nativas (FCM / APNs):**
+  - Alertas prioritários para chamadas da fila RN02 e lembretes de consultas que despertam a tela do celular.
+- [ ] **Sincronização com Calendário do Sistema:**
+  - Integração com Google Calendar e Apple Calendar para adicionar a consulta confirmada à agenda pessoal com um clique.
 
 ---
 
-## 🏥 5. Módulos Clínicos & Secretaria
+## 🔗 5. Integrações com Ecossistemas de Saúde
 
-- [ ] **Telemedicina Integrada (WebRTC):**
-  - Consulta por vídeo diretamente pelo navegador ou app mobile, sem necessidade de links externos (Zoom / Google Meet).
-- [ ] **Prescrição Digital com Assinatura ICP-Brasil:**
-  - Emissão de receitas médicas com QR Code e assinatura digital padrão CFM.
-- [ ] **Integração Oficial com WhatsApp Business (Meta Cloud API):**
-  - Mensagens ativas de confirmação com botões interativos (*"Confirmar Presença"*, *"Remarcar"*, *"Cancelar"*).
-- [ ] **Painel de Chamada para TV da Recepção:**
-  - Modo telão para sala de espera que chama o próximo paciente com som e exibição do consultório.
+- [ ] **Canal Oficial WhatsApp (WhatsApp Cloud API / Twilio):**
+  - Permitir que a secretária Lia atenda os pacientes diretamente pelo WhatsApp oficial da clínica com o mesmo motor de *Tool Calling*.
+- [ ] **Interoperabilidade com Padrões de Saúde (HL7 / FHIR):**
+  - Exportação de dados de agendamento e evolução clínica nos padrões abertos de saúde digital para integração com PEPs de mercado (Tasy, MV, Pixeon).
+- [ ] **Gateway de Pagamento Integrado:**
+  - Checkout transparente via PIX com geração automática de QR Code dinâmico e conciliação bancária imediata para consultas particulares.
 
 ---
 
-## ⚙️ 6. Refatoração de Código & Qualidade Técnica
+## 📊 6. Analytics & Inteligência Operacional
 
-- [ ] **Modularização dos Componentes Grandes:**
-  - Desmembrar `PhoneApp.tsx` (1.100+ linhas) em submódulos isolados: `HomeScreen.tsx`, `AppointmentsTab.tsx`, `SettingsTab.tsx`, `BookingWizard/`, `Sheets/`.
-  - Desmembrar `Chat.tsx` em `useVoiceChat.ts`, `useAiTools.ts`, `ChatBubble.tsx`, `ChatInput.tsx`.
-- [ ] **Testes Automatizados (Vitest + Playwright):**
-  - Testes unitários para regras de negócio (RN01 trava de 30 min, RN02 fila sequencial, RN03 concorrência).
-  - Testes E2E cobrindo o fluxo completo: Agendar -> Confirmar Presença -> Cancelar -> Fila de Espera.
-- [ ] **Monitoramento e Telemetria (Sentry + OpenTelemetry):**
-  - Registro de erros no cliente e métricas de desempenho de resposta da IA.
+- [ ] **Predição de Absenteísmo (*No-Show Scoring*):**
+  - Modelo preditivo de Machine Learning para identificar pacientes com alta probabilidade de falta e sugerir overbooking preventivo ou lembretes antecipados.
+- [ ] **Painel de Otimização de Produtividade Médica:**
+  - Relatórios de tempo médio de consulta, taxa de ocupação real vs. prevista e tempo de resposta da fila de espera sequencial.
+- [ ] **Trilha de Auditoria Imutável:**
+  - Logs detalhados de todas as ações de agendamento, cancelamento e acesso a dados para conformidade com normas do Conselho Federal de Medicina (CFM).
 
 ---
 
-## 🚀 7. Novas Funcionalidades Clínicas, Operacionais e de Produto (15 Sugestões Adicionais)
+<div align="center">
 
-### 🩺 7.1. Triagem Pré-Consulta Inteligente (Anamnese Prévia por IA)
-- [ ] **Questionário Adaptativo Automatizado:**
-  - 3 horas antes da consulta, a Lia faz 3 a 5 perguntas rápidas de triagem (queixa principal, alergias conhecidas, medicamentos em uso).
-  - A IA sintetiza um resumo clínico estruturado que é injetado diretamente no prontuário do médico, economizando até 7 minutos de cada atendimento.
+**AcolheMed** · *Transformando o acesso à saúde com tecnologia inclusiva e responsável.*
 
-### 🏢 7.2. Totem de Autoatendimento com Check-in por QR Code na Recepção
-- [ ] **Totem Físico para Sala de Espera:**
-  - O paciente chega na clínica e apenas aproxima o QR Code do app no leitor do totem (ou digita CPF/biometria facial).
-  - O totem imprime a senha de atendimento e notifica o painel do médico em tempo real: *"Paciente na sala de espera"*.
-
-### 📅 7.3. Gestão Automatizada de Retornos Médicos (Prazo de 30 Dias CFM)
-- [ ] **Controle de Retorno Gratuito:**
-  - O sistema calcula automaticamente a janela de retorno de 30 dias após a consulta inicial (conforme resolução CFM).
-  - No 20º dia, a Lia envia um lembrete: *"Você ainda tem direito a 1 retorno com a Dra. Helena até dia 15/09. Deseja agendar agora?"*.
-
-### 🎙️ 7.4. Ditado Médico com Speech-to-Text Especializado (Whisper Medical)
-- [ ] **Evolução Clínica por Voz no Painel do Médico:**
-  - O médico clica no microfone dentro do prontuário e dita a evolução, conduta e prescrição.
-  - O modelo converte a fala em texto formatado, reconhecendo terminologias médicas, posologias e CID-10 automaticamente.
-
-### 💳 7.5. Módulo de Pagamento Digital Integrado (PIX Dinâmico + Split de Pagamento)
-- [ ] **Geração de QR Code PIX Instantâneo com Webhook:**
-  - Para consultas particulares, o app gera o PIX Copia e Cola na hora; assim que o banco confirma o pagamento via Webhook, a vaga é confirmada na agenda.
-  - Suporte a Split de Pagamento automático (taxa da clínica retida na fonte e repasse líquido direto na conta do médico).
-
-### 🔍 7.6. Validação Automática de Elegibilidade de Convênio (Padrão TISS/TUSS)
-- [ ] **Checagem de Carteirinha em Tempo Real:**
-  - Conexão com Web Services das operadoras de saúde (Unimed, Bradesco, SulAmérica, Amil) para validar se a carteirinha está ativa, sem carência e autorizada para a especialidade antes de confirmar o agendamento.
-
-### 👨‍👩‍👧 7.7. Modo Família (Gestão de Múltiplos Dependentes em 1 Conta)
-- [ ] **Alternador Rápido de Pacientes:**
-  - Permite que um filho ou cuidador alterne entre o perfil da mãe idosa, pai e filhos pequenos na barra superior com 1 toque.
-  - Cada dependente mantém seu próprio histórico, carteirinha do convênio, relatórios e permissões de acesso.
-
-### 💊 7.8. Central de Medicamentos e Lembretes de Tomada de Remédio
-- [ ] **Organizador de Remédios Contínuos:**
-  - O paciente cadastra seus remédios com horários e dosagens. O app emite alarmes sonoros acessíveis na hora certa.
-  - Quando a caixa de remédio estiver no fim, o app já sugere marcar consulta de renovação de receita.
-
-### 🔮 7.9. IA Preditiva de No-Show (Previsão de Faltas com Machine Learning)
-- [ ] **Score Preditivo de Absenteísmo:**
-  - Algoritmo que cruza variáveis (previsão do tempo, dia da semana, histórico prévio de faltas do paciente, distância) e gera um score de risco de falta de 0 a 100%.
-  - Consultas com risco elevado (>75%) disparam confirmação prioritária ou deixam a fila de espera pré-aquecida.
-
-### 📈 7.10. Overbooking Inteligente e Seguro
-- [ ] **Encaixes Baseados em Probabilidade Estatística:**
-  - Para horários com alta probabilidade histórica de desistência, o sistema sugere encaixes automáticos calculados, maximizando a receita da clínica sem gerar atrasos na sala de espera.
-
-### 📊 7.11. Dashboard Financeiro e Produtividade Médica em PDF/Excel
-- [ ] **Relatórios Gerenciais para Administradores da Clínica:**
-  - Exportação em 1 clique de relatórios de faturamento por profissional, procedimentos mais realizados, taxa de conversão da fila e comparativo de absenteísmo mensal.
-
-### 💬 7.12. Bot da Lia no WhatsApp Oficial (Meta Cloud API / Twilio)
-- [ ] **Atendimento Conversacional Direto no WhatsApp:**
-  - O paciente que não quiser baixar o aplicativo pode conversar com a Lia diretamente pelo número oficial de WhatsApp da clínica, executando as mesmas 10 Tools (agendar, reagendar, cancelar, checar fila).
-
-### ⭐ 7.13. Pesquisa de Satisfação NPS Pós-Consulta Automatizada
-- [ ] **Coleta de Feedback com Análise de Sentimento:**
-  - 2 horas após a conclusão da consulta, a Lia envia uma mensagem curta de avaliação de 1 a 5 estrelas.
-  - Feedbacks negativos disparam alerta imediato para a ouvidoria da clínica agir antes do paciente reclamar na internet.
-
-### 🚗 7.14. Integração com Aplicativos de Transporte (Uber Health / 99)
-- [ ] **Botão "Pedir Carro para a Consulta":**
-  - No cartão da próxima consulta, um botão de 1 clique abre o app de transporte com o endereço da clínica já preenchido e horário de partida sugerido para chegar 15 minutos antes.
-
-### 📁 7.15. Cofre de Exames e Laudos com OCR Inteligente (Visão Computacional)
-- [ ] **Digitalização de Exames Impressos:**
-  - O paciente tira uma foto de um exame de sangue ou laudo em papel; a IA lê os valores de referência por OCR, destaca resultados alterados e anexa ao prontuário para o médico consultar.
-
----
-
-## 📊 Matriz Consolidada de Priorização (Esforço vs. Impacto)
-
-| Iniciativa | Impacto | Esforço | Prioridade |
-| :--- | :---: | :---: | :---: |
-| **Backend Real (Node + Postgres + Prisma)** | 🔴 Alto | 🟡 Médio | **P1 (Imediato)** |
-| **Modularização de `PhoneApp.tsx` e `Chat.tsx`** | 🟡 Médio | 🟢 Baixo | **P1 (Imediato)** |
-| **Ollama Backend Real com JSON Schema** | 🔴 Alto | 🟡 Médio | **P1 (Imediato)** |
-| **PIX Dinâmico com Confirmação Instantânea** | 🔴 Alto | 🟢 Baixo | **P1 (Imediato)** |
-| **Triagem Pré-Consulta por IA** | 🔴 Alto | 🟢 Baixo | **P1 (Imediato)** |
-| **App Nativo (React Native / Expo) com Push Notifications** | 🔴 Alto | 🔴 Alto | **P2 (Médio Prazo)** |
-| **Bot da Lia no WhatsApp Oficial** | 🔴 Alto | 🟡 Médio | **P2 (Médio Prazo)** |
-| **Gestão Automatizada de Retornos (30 Dias CFM)** | 🟡 Médio | 🟢 Baixo | **P2 (Médio Prazo)** |
-| **Ditado Médico por Voz no Prontuário** | 🔴 Alto | 🟡 Médio | **P2 (Médio Prazo)** |
-| **Totem de Autoatendimento na Recepção** | 🟡 Médio | 🟡 Médio | **P2 (Médio Prazo)** |
-| **Validação de Convênio (TISS/TUSS)** | 🔴 Alto | 🔴 Alto | **P2 (Médio Prazo)** |
-| **Previsão de No-Show com Machine Learning** | 🔴 Alto | 🟡 Médio | **P2 (Médio Prazo)** |
-| **Central de Medicamentos e Alarmes** | 🟡 Médio | 🟢 Baixo | **P3 (Futuro)** |
-| **Telemedicina WebRTC e Prescrição Digital ICP-Brasil** | 🟡 Médio | 🔴 Alto | **P3 (Futuro)** |
-| **Avatar VLibras e Hotword "Ei Lia"** | 🟡 Médio | 🟡 Médio | **P3 (Futuro)** |
-| **Cofre de Exames com OCR Inteligente** | 🟡 Médio | 🟡 Médio | **P3 (Futuro)** |
-| **Integração com Uber Health / 99** | 🟢 Baixo | 🟢 Baixo | **P3 (Futuro)** |
+</div>
